@@ -78,6 +78,11 @@
   </url>
   
   <url>
+    <loc>/categories/category/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/chinese/</loc>
     <lastmod>2013-10-02T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -144,12 +149,6 @@
   </url>
   
   <url>
-    <loc>/</loc>
-    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>/tags/image-gallery/</loc>
     <lastmod>2013-02-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -168,8 +167,23 @@
   </url>
   
   <url>
+    <loc>/page/about/</loc>
+  </url>
+  
+  <url>
+    <loc>/page/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/pagination/</loc>
     <lastmod>2014-08-15T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/</loc>
+    <lastmod>2015-07-23T21:13:14-05:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -222,8 +236,23 @@
   </url>
   
   <url>
+    <loc>/categories/subcategory/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/tags/tag-plugins/</loc>
     <lastmod>2014-10-29T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/tag1/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/tag2/</loc>
     <priority>0</priority>
   </url>
   

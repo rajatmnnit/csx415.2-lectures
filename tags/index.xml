@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Hugo tranquilpeak theme</title>
+    <title>Tags on Place for my stuff</title>
     <link>/tags/</link>
-    <description>Recent content in Tags on Hugo tranquilpeak theme</description>
+    <description>Recent content in Tags on Place for my stuff</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 02 Oct 2013 00:00:00 +0000</lastBuildDate>
@@ -188,6 +188,24 @@
       <pubDate>Wed, 29 Oct 2014 00:00:00 +0000</pubDate>
       
       <guid>/tags/tag-plugins/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tag1</title>
+      <link>/tags/tag1/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tag1/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tag2</title>
+      <link>/tags/tag2/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/tags/tag2/</guid>
       <description></description>
     </item>
     

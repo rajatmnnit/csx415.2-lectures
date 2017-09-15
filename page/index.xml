@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Pages on Place for my stuff</title>
+    <title>Pages on </title>
     <link>/page/</link>
-    <description>Recent content in Pages on Place for my stuff</description>
+    <description>Recent content in Pages on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     
@@ -11,12 +11,23 @@
     
     
     <item>
-      <title>New Page</title>
+      <title>Here I Am</title>
       <link>/page/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/page/about/</guid>
-      <description></description>
+      <description>Hello there. Welcome. I find it strange that you are reading this. What does that say about you? What does that say about me? I am just a lowly data scientist who put this site together to disseminate materials to students who hope to learn something about data science from me. There is no other reason for you to be here, reading this.
+But you are here. And that says something.</description>
+    </item>
+    
+    <item>
+      <title>Teaching</title>
+      <link>/page/teaching/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/page/teaching/</guid>
+      <description>I enjoy teaching, mostly about statistics, predictive modeling, and anything having to do with R. I aim to teach from a more practical standpoint, mainly because I am not a theoretical mathematician/statistician. There is nothing wrong with being theoretical, I am just not smart enough for it.
+Materials related to courses I teach can be found below. Enjoy.</description>
     </item>
     
   </channel>

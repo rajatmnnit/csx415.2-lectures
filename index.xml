@@ -6,139 +6,18 @@
     <description>Recent content on </description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 23 Jul 2015 21:13:14 -0500</lastBuildDate>
+    <lastBuildDate>Mon, 18 Sep 2017 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Hello R Markdown</title>
-      <link>/2015/07/hello-r-markdown/</link>
-      <pubDate>Thu, 23 Jul 2015 21:13:14 -0500</pubDate>
+      <title>Ain&#39;t nobody got time for that</title>
+      <link>/2017/09/aint-nobody-got-time-for-that/</link>
+      <pubDate>Mon, 18 Sep 2017 00:00:00 +0000</pubDate>
       
-      <guid>/2015/07/hello-r-markdown/</guid>
-      <description>R MarkdownThis is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see http://rmarkdown.rstudio.com.
-You can embed an R code chunk like this:
-summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 26.00 ## Median :15.0 Median : 36.00 ## Mean :15.4 Mean : 42.98 ## 3rd Qu.</description>
-    </item>
-    
-    <item>
-      <title>Welcome to Tranquilpeak 0.4.1-BETA</title>
-      <link>/2015/06/welcome-to-tranquilpeak-0.4.1-beta/</link>
-      <pubDate>Mon, 15 Jun 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/2015/06/welcome-to-tranquilpeak-0.4.1-beta/</guid>
-      <description>&lt;p&gt;Tranquilpeak is a gorgeous responsive theme for Hugo blog framework. It has many features and integrated services to improve user experience.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Elements showcase</title>
-      <link>/2015/05/elements-showcase/</link>
-      <pubDate>Thu, 28 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/2015/05/elements-showcase/</guid>
-      <description>&lt;p&gt;Check out how Tranquilpeak theme display well HTML elements (title, paragraph, blockquote, table and more..). It&amp;rsquo;s simple and elegant.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Cover image showcase</title>
-      <link>/2015/05/cover-image-showcase/</link>
-      <pubDate>Wed, 13 May 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/2015/05/cover-image-showcase/</guid>
-      <description>&lt;p&gt;Tranquilpeak integrate a unique &amp;ldquo;cover image&amp;rdquo; feature. Open this post to see how this feature sublimate your article.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>highlighted code showcase</title>
-      <link>/2015/03/highlighted-code-showcase/</link>
-      <pubDate>Mon, 23 Mar 2015 00:00:00 +0000</pubDate>
-      
-      <guid>/2015/03/highlighted-code-showcase/</guid>
-      <description>&lt;p&gt;Tranquilpeak Hugo theme have its own theme to highlight source code. It&amp;rsquo;s based on GitHub theme: simple and elegant. Check out how it sublimate source codes.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Tags plugins showcase</title>
-      <link>/2014/10/tags-plugins-showcase/</link>
-      <pubDate>Wed, 29 Oct 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/2014/10/tags-plugins-showcase/</guid>
-      <description>&lt;p&gt;This post is used to show how tag plugins are displayed. See &lt;a href=&#34;https://github.com/kakawait/hugo-tranquilpeak-theme/blob/master/docs/user.md#tags&#34;&gt;docs&lt;/a&gt; for more info.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hidden social section showcase</title>
-      <link>/2014/08/hidden-social-section-showcase/</link>
-      <pubDate>Sun, 17 Aug 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/2014/08/hidden-social-section-showcase/</guid>
-      <description>&lt;p&gt;This post is used to show how a site looks if the social section is hidden.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hidden tag section showcase</title>
-      <link>/2014/08/hidden-tag-section-showcase/</link>
-      <pubDate>Sat, 16 Aug 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/2014/08/hidden-tag-section-showcase/</guid>
-      <description>&lt;p&gt;This post is used to show how a site looks if the tag section is hidden.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Hidden pagination showcase</title>
-      <link>/2014/08/hidden-pagination-showcase/</link>
-      <pubDate>Fri, 15 Aug 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/2014/08/hidden-pagination-showcase/</guid>
-      <description>&lt;p&gt;This post is used to show how a site looks if the pagination is hidden.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Video integrations showcase</title>
-      <link>/2014/08/video-integrations-showcase/</link>
-      <pubDate>Sat, 09 Aug 2014 00:00:00 +0000</pubDate>
-      
-      <guid>/2014/08/video-integrations-showcase/</guid>
-      <description>&lt;p&gt;Youtube and Vimeo videos are easily integrated thanks to tags plugins. Of course, you can add video other platforms like dailymotion.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>中文測試</title>
-      <link>/2013/10/chinese-test/</link>
-      <pubDate>Wed, 02 Oct 2013 00:00:00 +0000</pubDate>
-      
-      <guid>/2013/10/chinese-test/</guid>
-      <description>&lt;p&gt;This is a chinese test post to show you how chinese is displayed.
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>Image gallery showcase</title>
-      <link>/2013/02/image-gallery-showcase/</link>
-      <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
-      
-      <guid>/2013/02/image-gallery-showcase/</guid>
-      <description>&lt;p&gt;And here is the image gallery!
-&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>日本語テスト</title>
-      <link>/2013/01/japanese-test/</link>
-      <pubDate>Wed, 02 Jan 2013 00:00:00 +0000</pubDate>
-      
-      <guid>/2013/01/japanese-test/</guid>
-      <description>&lt;p&gt;This is a Japanese test post to show you how japanese is displayed.
-&lt;/p&gt;</description>
+      <guid>/2017/09/aint-nobody-got-time-for-that/</guid>
+      <description>I certainly don’t want to promise that I’ll post anything here. My past experiences have proven that maintaining a blog is serious business. However, I’m gonna leave this section here, just in case I change my mind.</description>
     </item>
     
     <item>
@@ -147,8 +26,8 @@ summary(cars)## speed dist ## Min. : 4.0 Min. : 2.00 ## 1st Qu.:12.0 1st Qu.: 2
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/page/about/</guid>
-      <description>Hello there. Welcome. I find it strange that you are reading this. What does that say about you? What does that say about me? I am just a lowly data scientist who put this site together to disseminate materials to students who hope to learn something about data science from me. There is no other reason for you to be here, reading this.
-But you are here. And that says something.</description>
+      <description>Hello there. Welcome. I find it strange that you are here, reading this. What does it say about you that you are? What does it say about me that I even wrote this in the first place?
+I am just a lowly data scientist who put this site together to provide materials to students who hope to learn something about data science from me. There is no other reason for you to be here, reading this.</description>
     </item>
     
     <item>
@@ -158,7 +37,7 @@ But you are here. And that says something.</description>
       
       <guid>/page/teaching/</guid>
       <description>I enjoy teaching, mostly about statistics, predictive modeling, and anything having to do with R. I aim to teach from a more practical standpoint, mainly because I am not a theoretical mathematician/statistician. There is nothing wrong with being theoretical, I am just not smart enough for it.
-Materials related to courses I teach can be found below. Enjoy.</description>
+Materials related to courses I teach can be found below. Enjoy at your own risk.</description>
     </item>
     
   </channel>

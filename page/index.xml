@@ -26,8 +26,19 @@ I am just a lowly data scientist who put this site together to provide materials
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/page/teaching/</guid>
-      <description>I enjoy teaching, mostly about statistics, predictive modeling, and anything having to do with R. I aim to teach from a more practical standpoint, mainly because I am not a theoretical mathematician/statistician. There is nothing wrong with being theoretical, I am just not smart enough for it.
-Materials related to courses I teach can be found below. Enjoy at your own risk.</description>
+      <description> I enjoy teaching, mostly about statistics, predictive modeling, and anything having to do with R. I aim to teach from a more practical standpoint, mainly because I am not a theoretical mathematician/statistician. There is nothing wrong with being theoretical, I am just not smart enough for it.
+Materials related to courses I teach can be found below. Enjoy at your own risk.
+COMPSCI X415.2-Introduction to Data Science </description>
+    </item>
+    
+    <item>
+      <title>X415.2 - Introduction to Data Science</title>
+      <link>/page/x4152_introduction_to_data_science/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/page/x4152_introduction_to_data_science/</guid>
+      <description>Introduction to Data Science Course Description This introductory course in data science will help you understand the core concepts of data science and predictive modeling illustrated through the use of the R language. This course covers some of the fundamentals of effectively executing data science projects including data gathering and cleaning, exploratory data analysis, data visualization, predictive modeling, collaboration and communication.
+Course Learning Objectives R environment Basic R programming with the tidyverse Exploratory data analysis Avoiding common data science pitfalls Linear and nonlinear predictive modeling Regression and classification Assessing model accuracy Reproducible computation with R Markdown and git Collaborate and communicate results effectively</description>
     </item>
     
   </channel>

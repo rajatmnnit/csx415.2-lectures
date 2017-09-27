@@ -24,13 +24,13 @@
   </url>
   
   <url>
-    <loc>/tags/data-science/</loc>
+    <loc>/categories/data-science/</loc>
     <lastmod>2017-09-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/categories/data-science/</loc>
+    <loc>/tags/data-science/</loc>
     <lastmod>2017-09-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
@@ -58,6 +58,10 @@
   
   <url>
     <loc>/page/teaching/</loc>
+  </url>
+  
+  <url>
+    <loc>/page/x4152_introduction_to_data_science/</loc>
   </url>
   
 </urlset>

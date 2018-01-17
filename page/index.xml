@@ -11,6 +11,15 @@
     
     
     <item>
+      <title></title>
+      <link>/page/x4152_introduction_to_data_science/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/page/x4152_introduction_to_data_science/</guid>
+      <description>X415.2 - Introduction to Data Sciencecode{white-space: pre;}pre:not([class]) {background-color: white;}if (window.hljs &amp;&amp; document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) {window.setTimeout(function() {hljs.initHighlighting();}, 0);}h1 {font-size: 34px;}h1.title {font-size: 38px;}h2 {font-size: 30px;}h3 {font-size: 24px;}h4 {font-size: 18px;}h5 {font-size: 16px;}h6 {font-size: 12px;}.</description>
+    </item>
+    
+    <item>
       <title>Here I Am</title>
       <link>/page/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -37,8 +46,14 @@ COMPSCI X415.2-Introduction to Data Science </description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/page/x4152_introduction_to_data_science/</guid>
-      <description>Introduction to Data Science Course Description This introductory course in data science will help you understand the core concepts of data science and predictive modeling illustrated through the use of the R language. This course covers some of the fundamentals of effectively executing data science projects including data gathering and cleaning, exploratory data analysis, data visualization, predictive modeling, collaboration and communication.
-Course Learning Objectives R environment Basic R programming with the tidyverse Exploratory data analysis Avoiding common data science pitfalls Linear and nonlinear predictive modeling Regression and classification Assessing model accuracy Reproducible computation with R Markdown and git Collaborate and communicate results effectively</description>
+      <description>Introduction to Data Science Course Information Course title: X415.2 Introduction to Data Science
+Meeting times and location: T, 6:30PM-9:30PM, SF Campus Room 711
+Course website: https://r-clements.github.io/page/x4152_introduction_to_data_science/
+All course materials will be available at the website above. I will also use Canvas to distribute assignments, post grades, and lecture materials, if that suits you.
+Instructor Information Name: Robert Clements
+email: robert UNDERSCORE clements AT berkeley DOT edu
+Homepage: https://r-clements.github.io
+Course Description Gain an understanding of the core concepts of data science illustrated through the use of the R language.</description>
     </item>
     
   </channel>

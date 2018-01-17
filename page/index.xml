@@ -46,6 +46,16 @@ COMPSCI X415.2-Introduction to Data Science </description>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/page/x4152_introduction_to_data_science/</guid>
+      <description>Introduction to Data Science Syllabus Course Materials Installing R and RStudio You will need both R and RStudio for this course. R is a statistical computing and graphic programming language, and RStudio is the IDE for R that we will be using. Installing these on your laptop before our first meeting will help us move along at a quicker pace.
+To install R, follow the instructions for your OS here: https://cran.</description>
+    </item>
+    
+    <item>
+      <title>X415.2 - Introduction to Data Science syllabus</title>
+      <link>/page/x4152_syllabus/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/page/x4152_syllabus/</guid>
       <description>Introduction to Data Science Course Information Course title: X415.2 Introduction to Data Science
 Meeting times and location: T, 6:30PM-9:30PM, SF Campus Room 711
 Course website: https://r-clements.github.io/page/x4152_introduction_to_data_science/

@@ -166,8 +166,7 @@ As we go through each week I will make available the
 
 - readings,
 - slides,
-- exercises,
-- and homeworks.
+- and homeworks/labs.
 
 ---
 class: inverse, center, middle
@@ -177,32 +176,31 @@ class: inverse, center, middle
 ---
 ### Class Format
 
-- Weekly lectures and discussions (in bite-sized chunks)
+- Weekly lectures and discussions for first two hours (in bite-sized chunks)
   + There may be multiple slide decks for each lecture (e.g. labeled Session_1.1, Session_1.2, etc.)
 
-- In class exercises - bring your laptops
-
-- Weekly homeworks (7 in total)
+- Weekly homeworks/labs (7 in total)
+  + To be started in-class during last hour - bring your laptops
+  + Due on Tuesday of the following week
 
 - Take home midterm (basically like a homework assignment)
 
-- Take home final (basically another homework assignment, but comprehensive)
+- Final exam (take-home + in-class) 
 
 
 ---
 ### Class Format
 
-- Weekly lectures and discussions (in bite-sized chunks)
+- Weekly lectures and discussions for first two hours (in bite-sized chunks)
   + There may be multiple slide decks for each lecture (e.g. labeled Session_1.1, Session_1.2, etc.)
 
-- In class exercises - bring your laptops
-
-- Weekly homeworks (7 in total) **individual**
+- Weekly homeworks/labs (7 in total) **individual**
+  + To be started in-class during last hour - bring your laptops
+  + Due on Tuesday of the following week
 
 - Take home midterm (basically like a homework assignment) **individual**
 
-- Take home final (basically another homework assignment, but comprehensive) **individual**
-
+- Final exam (take-home + in-class) **individual**
 
 ---
 ### Other Class Policies
@@ -211,7 +209,7 @@ Collaborating:
 
 Data science is rarely done alone. In the office, you will have others around that you will either be collaborating with directly, or using as resources to help you learn and grow. However, here are the guidelines you should use when working on your assignments:  
 
-- Feel free to discuss homework problems with each other, but all code and writing must have been completed by you. Do NOT share code.  
+- Feel free to discuss homework/lab problems with each other, but all code and writing must have been completed by you. Do NOT share code.  
 
 - You can NOT work together on the midterm and final. Don't discuss the problems with each other. Direct any questions you have to me.  
 
@@ -220,9 +218,9 @@ Data science is rarely done alone. In the office, you will have others around th
 ---
 ### Attendance and Grading
 
-Attendance is expected and mandatory. If you have any concerns, please see me.
+Attendance is expected and mandatory, but can be excused for illness/emergency. If you have any concerns, please see me.
 
-Criterion 1 (Homework) – 30% (Lowest score will be dropped)  
+Criterion 1 (Homework/Labs) – 30% (Lowest score will be dropped)  
 Criterion 2 (Take home midterm) – 30%  
 Criterion 3 (Take home final) -  30%  
 Criterion 4 (Attendance and Participation) - 10%  

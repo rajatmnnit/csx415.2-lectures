@@ -133,7 +133,11 @@ class: center, middle, inverse
 # Git and Github
 
 ---
+### What is git?
 
+.center[![](pics/git_comic.png)]
+
+---
 ### What is git?
 
 - Git is a *distributed* version control system (VCS)

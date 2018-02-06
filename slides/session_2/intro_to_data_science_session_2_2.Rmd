@@ -35,6 +35,13 @@ class: inverse, center, middle
 - Area - how big (in two dimensions)
 - Shade/Color - to what extent? **Beware of red/green color blindness**
 
+Our ability to perceive differences gets worse as we go down this list. This helps explain why bar charts are usually (always!) preferred over pie charts and why color gradients are often frustrating to interpret.
+
+---
+### Visual Cues
+![](pics/world_map.png)
+![](pics/world_map_key.png)
+[https://en.wikipedia.org/wiki/List_of_countries_by_traffic-related_death_rate](https://en.wikipedia.org/wiki/List_of_countries_by_traffic-related_death_rate)
 ---
 ### Coordinate systems
 

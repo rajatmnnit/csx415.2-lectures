@@ -273,6 +273,15 @@ filter(flights, month %in% c(11, 12))
 ```
 
 ---
+### Pop Quiz
+
+Without writing code, how would we find all flights in the `flights` data in January, Febuary, and April that departed before 6:00AM or after 6:00PM and had arrival delay of more than 60 minutes? Note that departure times are given as integers (e.g. 6:00PM = 1800) 
+
+```{r, echo = FALSE}
+# (month = 1 OR month = 2 OR month = 4) AND (dep_time < 600 OR dep_time > 1800) AND arr_delay > 60
+# month %in% (1, 2, 4) & (dep_time < 600 | dep_time > 1800) & arr_delay > 60
+```
+---
 ### The `filter()` verb
 
 Missing values in R are denoted as `NA` (not available). To filter out, or check for missing values, we use `is.na()`.

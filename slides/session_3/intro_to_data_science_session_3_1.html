@@ -232,6 +232,12 @@ ggplot(nz, aes(long, lat, group = group)) +
 
 &lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 ---
+### Pop Quiz
+
+Make this plot using the `mpg` data set.
+
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+---
 class: inverse, center, middle
 
 # Canonical Data Graphics
@@ -251,7 +257,7 @@ ggplot(data = diamonds) +
   geom_bar(mapping = aes(x = cut))
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -307,7 +313,7 @@ ggplot(data = diamonds) +
   geom_histogram(mapping = aes(x = carat))
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-16-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -323,7 +329,7 @@ ggplot(data = diamonds) +
   geom_histogram(mapping = aes(x = carat), binwidth = 1)
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -339,7 +345,7 @@ ggplot(data = diamonds) +
   geom_histogram(mapping = aes(x = carat), binwidth = .01)
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -367,7 +373,7 @@ ggplot(data = diamonds) +
   geom_density(mapping = aes(x = carat)) 
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -384,7 +390,7 @@ ggplot(data = diamonds, mapping = aes(x = carat)) +
   geom_density() 
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Univariate
 
@@ -400,7 +406,7 @@ ggplot(data = diamonds) +
   geom_density(mapping = aes(x = carat), adjust = 2) 
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Multivariate
 
@@ -459,7 +465,7 @@ ggplot(data = diamonds) +
   geom_boxplot(mapping = aes(x = cut, y = carat))
 ```
 
-&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-23-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Multivariate
 
@@ -478,6 +484,12 @@ or larger than:
 `\(Q3 + 1.5 \times IQR\)`
 
 where IQR is the inter-quartile range defined as `\(IQR = Q3-Q1\)`, Q1 is the 25th percentile, and Q3 is the 75th percentile. 
+---
+### Pop Quiz
+
+Make this terrible plot using the `diamonds` data set, and then never make anything this terrible again.
+
+&lt;img src="intro_to_data_science_session_3_1_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 ---
 class: inverse, center, middle
 

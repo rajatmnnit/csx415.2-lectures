@@ -192,6 +192,17 @@ ggplot(nz, aes(long, lat, group = group)) +
   coord_quickmap()
 ```
 ---
+### Pop Quiz
+
+Make this plot using the `mpg` data set.
+
+```{r, echo=FALSE}
+ggplot(data = mpg, mapping = aes(x = drv, fill = class)) + 
+  geom_bar(position = 'dodge') + 
+  xlab('Drive of vehicle') +
+  coord_flip()
+```
+---
 class: inverse, center, middle
 
 # Canonical Data Graphics
@@ -376,6 +387,17 @@ or larger than:
 $Q3 + 1.5 \times IQR$
 
 where IQR is the inter-quartile range defined as $IQR = Q3-Q1$, Q1 is the 25th percentile, and Q3 is the 75th percentile. 
+---
+### Pop Quiz
+
+Make this terrible plot using the `diamonds` data set, and then never make anything this terrible again.
+
+```{r, echo = FALSE}
+ggplot(data = diamonds) +
+  geom_histogram(mapping = aes(x = carat), fill = 'green', color = 'red') +
+  xlab('Carat of diamond') +
+  coord_flip()
+```
 ---
 class: inverse, center, middle
 

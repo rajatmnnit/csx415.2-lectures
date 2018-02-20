@@ -23,6 +23,7 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
   + Data sources
   + Flat files
   + Web scraping
+  + API's
   + *R for Data Science - Section 11*
   + *Modern Data Science with R - Chapter 5.5*
 - Data Export
@@ -30,6 +31,11 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
   + R-specific format
   + feather
 - R packages for working with data sources
+
+---
+class: inverse, center, middle
+
+# Some motivation for this week: [a Shiny App built in R](http://blog.rdata.lu/visualization/bike/)
 
 ---
 class: inverse, center, middle
@@ -69,6 +75,7 @@ For this session we'll play with importing:
 
 - flat files  
 - data from websites
+- data from API's
 
 .center[![](pics/flat_files.png)]
 ---
@@ -169,7 +176,51 @@ big_lebowski %>%
    html_nodes("#titleCast .itemprop span") %>%
    html_text()
 ```
+---
+### API's
 
+Back to our motivating example. [This Shiny app](http://blog.rdata.lu/visualization/bike/) was made in R, using the `shiny` package.
+
+Brief blog post about the app is [here](http://www.blog.rdata.lu/post/2018-02-20-api-shiny-nice-app/).
+
+Raw code is on Github [here](https://github.com/krosamont/shiny_bike/), but for a look at how the data is imported, go to Github [here](https://github.com/krosamont/shiny_bike/blob/master/server.R), lines 19-33.
+
+![](pics/shiny.png)
+---
+### API's
+
+The blog specifies the format of the input data from the API:
+
+{
+  "number": 123,
+  "contract_name" : "Paris",
+  "name": "stations name",
+  "address": "address of the station",
+  "position": {
+    "lat": 48.862993,
+    "lng": 2.344294
+  },
+  "banking": true,
+  "bonus": false,
+  "status": "OPEN",
+  "bike_stands": 20,
+  "available_bike_stands": 15,
+  "available_bikes": 5,
+  "last_update": <timestamp>
+}
+
+If you want to pull the data yourself, you'll need an API Key. Do this outside of class.
+
+```{r, eval = FALSE}
+library(jsonlite)
+
+# Pulling data for Dublin
+url <- paste0("https://api.jcdecaux.com/vls/v1/stations?contract=",'Dublin',"&apiKey=YOUR_API_KEY")
+df_api <- fromJSON(url)
+```
+---
+class: inverse, center, middle
+# Demo of API Data Ingestion
 ---
 class: inverse, center, middle
 # Data Export

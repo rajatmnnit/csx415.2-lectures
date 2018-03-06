@@ -1,0 +1,77 @@
+---
+title: "Introduction to Data Science"
+subtitle: "Session 6.1"
+author: "Robert Clements"
+date: ""
+output:
+  xaringan::moon_reader:
+    css: rc_css.css
+    lib_dir: libs
+    nature:
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+---
+
+```{r setup, include=FALSE}
+options(htmltools.dir.version = FALSE)
+knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning = FALSE)
+```
+
+### Housekeeping
+
+- Any questions?
+- Homework 4 solutions are up
+- Help future students and your future self by giving feedback
+
+---
+### Session 6.1 Outline
+
+- Review the midterm
+- Review what we've done
+
+---
+class: inverse, center, middle
+# Midterm solutions
+---
+class: inverse, center, middle
+# What we've done 
+---
+### What is a data scientist? ![](pics/datascience_unicorn.png)
+
+![](pics/moneyball.jpg)
+---
+### What does a data scientist do?
+
+![](pics/lifecycle_enjoy.jpg) ![](pics/lifecycle_times.jpg)
+---
+### How and why do they do it?
+
+- Sometimes for machines (predictive accuracy), sometimes for humans (to understand and take action)
+
+- Ethically
+
+- With lots of different tools
+  + Data storage: SQL, Hive, Hadoop, NoSQL, flat files, etc.
+  + Computing: R, Python, Matlab, SAS, Scala, Spark, laptops, servers, cloud, etc.
+  + Reporting: Tableau, Powerpoint, Word, Excel, etc.
+  + Deploying: platforms, developers, etc.
+
+- In a reproducible way
+  + using version control (git, svn)
+  + clean and commented code that actually runs!
+  + R/Jupyter Notebooks, R Markdown, and many other tools for reporting and technical documentation
+
+---
+.center[![](pics/lifecycle.png)]
+---
+### What does the future of data science look like?
+
+.pull-left[![](pics/roomba_cat.gif)]
+
+.pull-right[![](pics/hype.jpg)]
+
+---
+class: inverse, center, middle
+
+# End of Session 6.1

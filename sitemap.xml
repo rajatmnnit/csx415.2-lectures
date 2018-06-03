@@ -44,6 +44,10 @@
   </url>
   
   <url>
+    <loc>/page/about_2/</loc>
+  </url>
+  
+  <url>
     <loc>/page/</loc>
     <priority>0</priority>
   </url>

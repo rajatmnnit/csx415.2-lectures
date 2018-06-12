@@ -20,8 +20,7 @@ options(htmltools.dir.version = FALSE)
 ### Housekeeping
 
 - The wait list: I cannot add you. Official policy is that you will be offered an open spot in the order you fall on the list, if spots are available.
-  + We only have 36 seats, which have to go to those who are enrolled.
-  + If a spot doesn't open soon, think about joining the class offered June 5 - Aug 7.
+  + If a spot doesn't open soon, think about joining the class the next time it is offered.
 - RStudio, R and R package issues?
   + Don't worry about masked functions or conflicts yet.
   + RStudio Cloud is still an option for those who are frustrated.

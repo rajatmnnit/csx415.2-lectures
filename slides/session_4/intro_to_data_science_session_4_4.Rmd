@@ -38,9 +38,9 @@ Sometimes one variable is scattered across multiple rows. Remember this table of
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(tidyverse)
 hiv <- as.tibble(data.frame(Country = c('France', 'South Africa', 'United States'),
-                  `1979` = c(NA, NA, .318), `1980` = c(NA, NA, NA),
-                  `1981` = c(.3, 14.8, 0.5), `1982` = c(.4, 17.2, .6)))
-names(hiv) <- c('Country', '1979', '1989', '1999', '2009')
+                  Y1979 = c(NA, NA, .318), Y1980 = c(NA, NA, NA),
+                  Y1981 = c(.3, 14.8, 0.5), Y1982 = c(.4, 17.2, .6)))
+names(hiv) <- c('Country', 'Y1979', 'Y1989', 'Y1999', 'Y2009')
 ```
 ```{r, echo = FALSE}
 knitr::kable(hiv, 'html')
@@ -50,7 +50,7 @@ knitr::kable(hiv, 'html')
 
 Can we make it look like this instead?
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-hiv_2 <- hiv %>% gather('1979':'2009', key = 'Year', value = 'HIV_rate')
+hiv_2 <- hiv %>% gather('Y1979':'Y2009', key = 'Year', value = 'HIV_rate')
 ```
 ```{r, echo = FALSE}
 knitr::kable(hiv_2, 'html')
@@ -90,7 +90,7 @@ All we will need in order to do this is:
 
 Can we make it look like this instead?
 ```{r}
-hiv_gathered <- hiv %>% gather('1979', '1989', '1999', '2009', key = 'Year', value = 'HIV rate')
+hiv_gathered <- hiv %>% gather(Y1979, Y1989, Y1999, Y2009, key = 'Year', value = 'HIV rate')
 ```
 ```{r, echo = FALSE}
 knitr::kable(hiv_gathered, 'html')
@@ -100,21 +100,24 @@ knitr::kable(hiv_gathered, 'html')
 
 Can we make it look like this instead?
 ```{r}
-hiv_gathered <- hiv %>% gather('1979':'2009', key = 'Year', value = 'HIV rate')
+hiv_gathered <- hiv %>% gather(Y1979:Y2009, key = 'Year', value = 'HIV rate')
 ```
 ```{r, echo = FALSE}
 knitr::kable(hiv_gathered, 'html')
 ```
 ---
-### Gathering data
+### Pop Quiz
 
-The original column names were numbers, which is why they had to be quoted in the `gather()` function. But, recall that tidyverse packages like unquoted variables.
-```{r}
-names(hiv) <- c('Country', 'one', 'two', 'three', 'four')
-hiv_gathered <- hiv %>% gather(one:four, key = 'Year', value = 'HIV_rate')
-```
+Why might this result in an error?
+
 ```{r, echo = FALSE}
-knitr::kable(hiv_2, 'html')
+hiv_nums <- hiv
+names(hiv_nums) <- c('Country', '1979', '1989', '1999', '2009')
+knitr::kable(hiv_nums, 'html')
+```
+
+```{r, eval = FALSE}
+hiv %>% gather(1979:2009, key = 'Year', value = 'HIV rate')
 ```
 ---
 ### Spreading data

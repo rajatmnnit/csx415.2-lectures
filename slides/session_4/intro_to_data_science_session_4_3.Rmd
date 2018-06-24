@@ -72,9 +72,9 @@ This is a table of HIV prevalency for countries and years. Why would you say thi
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 hiv <- as.tibble(data.frame(Country = c('France', 'South Africa', 'United States'),
-                  `1979` = c(NA, NA, .318), `1989` = c(NA, NA, NA),
-                  `1999` = c(.3, 14.8, 0.5), `2009` = c(.4, 17.2, .6)))
-names(hiv) <- c('Country', '1979', '1989', '1999', '2009')
+                  `Y1979` = c(NA, NA, .318), `Y1989` = c(NA, NA, NA),
+                  `Y1999` = c(.3, 14.8, 0.5), `Y2009` = c(.4, 17.2, .6)))
+names(hiv) <- c('Country', 'Y1979', 'Y1989', 'Y1999', 'Y2009')
 ```
 ```{r, echo = FALSE}
 knitr::kable(hiv, 'html')

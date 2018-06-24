@@ -11,6 +11,8 @@ output:
       highlightStyle: github
       highlightLines: true
       countIncrementalSlides: false
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -23,13 +25,11 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
 - Homework:
   + Questions on Homework 3?
   + Homework 2 solutions are up
-  + How the homework is graded
 - Readings for next week
-- Midterm will be assigned next Tuesday and due the following Tuesday before class
+- Midterm will be assigned next Tuesday (7/3) and due the following Friday (7/13)
   + It will be comprehensive, including material from next week
   + It is worth 30% of your grade
-  + Late assignments will get a zero grade - we will be reviewing it during class
-- I am on vacation Thursday 2/22 - Sunday 2/25
+  + Late assignments will get a zero grade 
 
 ---
 class: inverse, center, middle

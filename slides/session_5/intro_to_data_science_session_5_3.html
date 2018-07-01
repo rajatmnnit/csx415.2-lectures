@@ -200,9 +200,15 @@ ggplot(data = faithful, aes(x = eruptions)) +
 ---
 ### Pop Quiz
 
-Look at the `faithful` data set and ask yourself: are there other variables that might affect this pattern? If so, make a plot that reveals the reason for the pattern seen in this histogram. What is the reason?
+This is a histogram of the eruption times (in minutes) of the Old Faithful geyser in Yellowstone National Park. What might explain this shape?
 
 &lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Pop Quiz
+
+Look at the `faithful` data set and ask yourself: is there a variable that might affect the pattern seen below? If so, make a plot that reveals the reason for the pattern seen in this histogram. What is the reason?
+
+&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Your first taste of a model
 
@@ -216,7 +222,7 @@ ggplot(data = diamonds, mapping = aes(x = cut, y = price)) +
   geom_boxplot()
 ```
 
-&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Your first taste of a model
 
@@ -228,7 +234,7 @@ ggplot(data = diamonds) +
   geom_bin2d(mapping = aes(x = carat, y = price))
 ```
 
-&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Your first taste of a model
 
@@ -244,7 +250,7 @@ ggplot(data = diamonds) +
   geom_bin2d(mapping = aes(x = carat, y = price))
 ```
 
-&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
+&lt;img src="intro_to_data_science_session_5_3_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
 ---
 ### Thought experiment
 

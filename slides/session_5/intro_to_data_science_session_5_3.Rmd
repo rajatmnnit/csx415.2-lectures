@@ -185,7 +185,17 @@ ggplot(data = faithful, aes(x = eruptions)) +
 ---
 ### Pop Quiz
 
-Look at the `faithful` data set and ask yourself: are there other variables that might affect this pattern? If so, make a plot that reveals the reason for the pattern seen in this histogram. What is the reason?
+This is a histogram of the eruption times (in minutes) of the Old Faithful geyser in Yellowstone National Park. What might explain this shape?
+
+```{r, echo=FALSE}
+ggplot(data = faithful, aes(x = eruptions)) +
+  geom_histogram() +
+  xlab('Eruption time in minutes')
+```
+---
+### Pop Quiz
+
+Look at the `faithful` data set and ask yourself: is there a variable that might affect the pattern seen below? If so, make a plot that reveals the reason for the pattern seen in this histogram. What is the reason?
 
 ```{r, echo=FALSE}
 ggplot(data = faithful, aes(x = eruptions)) +

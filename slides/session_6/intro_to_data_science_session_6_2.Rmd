@@ -113,6 +113,9 @@ This is the big pool we draw our data from.
 A *fixed* or *given* set of data from our larger population.
 
 Example: I want to understand all of our users that call in to complain about our products. For various reasons, I do not have access to every single call, so I take a random sample of calls which should be **representative** of the population and do my analysis on that.
+
+.center[![](pics/sample.jpg)]
+
 ---
 class: inverse, center, middle
 # Sample Statistics

@@ -99,6 +99,9 @@ This is the big pool we draw our data from.
 A *fixed* or *given* set of data from our larger population.
 
 Example: I want to understand all of our users that call in to complain about our products. For various reasons, I do not have access to every single call, so I take a random sample of calls which should be **representative** of the population and do my analysis on that.
+
+.center[![](pics/sample.jpg)]
+
 ---
 class: inverse, center, middle
 # Sample Statistics
@@ -316,11 +319,11 @@ flights %&gt;% sample_n(30) %&gt;% summarize(min_time = min(air_time, na.rm = TR
 ## # A tibble: 5 x 2
 ##   stats     values
 ##   &lt;chr&gt;      &lt;dbl&gt;
-## 1 min_time    27.0
-## 2 med_time   160  
-## 3 mean_time  179  
-## 4 IQR_time   177  
-## 5 max_time   336
+## 1 min_time    39.0
+## 2 med_time   133  
+## 3 mean_time  180  
+## 4 IQR_time   218  
+## 5 max_time   383
 ```
 ]
 
@@ -366,11 +369,11 @@ flights %&gt;% sample_n(300) %&gt;% summarize(min_time = min(air_time, na.rm = T
 ## # A tibble: 5 x 2
 ##   stats     values
 ##   &lt;chr&gt;      &lt;dbl&gt;
-## 1 min_time    32.0
-## 2 med_time   138  
-## 3 mean_time  165  
-## 4 IQR_time   130  
-## 5 max_time   611
+## 1 min_time    22.0
+## 2 med_time   130  
+## 3 mean_time  145  
+## 4 IQR_time    87.2
+## 5 max_time   609
 ```
 ]
 ---
@@ -414,11 +417,11 @@ flights %&gt;% sample_n(3000) %&gt;% summarize(min_time = min(air_time, na.rm = 
 ## # A tibble: 5 x 2
 ##   stats     values
 ##   &lt;chr&gt;      &lt;dbl&gt;
-## 1 min_time    23.0
-## 2 med_time   132  
-## 3 mean_time  153  
-## 4 IQR_time   111  
-## 5 max_time   637
+## 1 min_time    22.0
+## 2 med_time   129  
+## 3 mean_time  149  
+## 4 IQR_time   107  
+## 5 max_time   676
 ```
 ]
 ---
@@ -469,7 +472,7 @@ If we repeat this over and over again and collect all results, we can look at th
 
 The standard error is the standard deviation (spread) *of the sampling distribution* - it is a measure of the spread of our sample statistics (the sample average in the plot below).
 
-In this case, the standard error (standard deviation of our sample means) is 5.1947788.
+In this case, the standard error (standard deviation of our sample means) is 5.4475642.
 
 &lt;img src="intro_to_data_science_session_6_2_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
 ---
@@ -492,7 +495,7 @@ sd(flights$air_time, na.rm = TRUE)/sqrt(300)
 ## [1] 5.409097
 ```
 
-This is pretty darn close to what we got: 5.1947788
+This is pretty darn close to what we got: 5.4475642
 
 ---
 ### Pop Quiz

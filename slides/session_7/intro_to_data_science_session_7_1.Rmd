@@ -30,9 +30,13 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
 ---
 ### Session 7.1 Outline
 
-- Statistical learning I
+- Midterm Review
+- Statistical learning
   + More with Regression
   + *Introduction to Statistical Learning - Chapter 3*
+---
+class: inverse, center, middle
+# Midterm review
 ---
 class: inverse, center, middle
 # Statistical Learning I
@@ -58,6 +62,36 @@ diamonds_n %>% ggplot(aes(x = carat, y = price)) +
   geom_smooth(method='lm',formula=y~x) +
   theme_bw()
 ```
+---
+### Regression
+
+With simple linear regression, we assume a linear relationship between X and Y.
+
+**Parametric** 
+
+$$\huge f(X) = \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} + \ldots + \beta_{p}X_{p}$$
+
+We would love to know all of the $\Huge \beta$ values, but we won't, so we estimate them:
+
+$$\huge \hat{f}(X) = \hat{\beta}_{0} + \hat{\beta}_{1}X_{1} + \hat{\beta}_{2}X_{2} + \ldots + \hat{\beta}_{p}X_{p}$$
+---
+### Regression assumptions
+
+- Linearity - the mean of our target is a linear combination of our features
+
+- Constant variance (homoskedasticity) - the error around the regression line should be constant
+
+- Independence - errors are independent and uncorrelated
+
+- No multicollinearity - uncorrelated features
+---
+### Regression solution
+
+For those who are curious, the coefficients $\Huge \hat{\beta}$ are estimated like so:
+
+$$\huge \hat{\beta} = (X^{T}X)^{-1}X^{T}y$$
+
+where $\Huge X$ is a matrix of all of our features, and $\Huge y$ is our target
 ---
 ### Regression in R
 
@@ -400,7 +434,16 @@ Recall what we said about the $\large R^2$ when we add more features?
 glance(diam_lm)
 glance(diam_mult_lm)
 ```
+---
+### Interpreting coefficients
 
+Now that we have more than one feature in the model, we add a little verbiage to our interpretation to account for the *other* features.
+
+Ex: for every one unit increase in **carat**, the price increases, **on average**, by $10,234, **controlling for all other features**, i.e. assuming all other features are held constant.
+
+```{r}
+tidy(diam_mult_lm)
+```
 ---
 ### Pop Quiz
 
@@ -442,11 +485,6 @@ What did we learn?
 - How we measure the model's goodness-of-fit with the `adjusted` $\large R^2$
 
 - Basic multiple regression
-
----
-### This brings us too...
-
-the language of predictive modeling.
 
 ---
 class: inverse, center, middle

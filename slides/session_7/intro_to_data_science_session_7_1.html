@@ -29,9 +29,13 @@ class: center, middle, inverse, title-slide
 ---
 ### Session 7.1 Outline
 
-- Statistical learning I
+- Midterm Review
+- Statistical learning
   + More with Regression
   + *Introduction to Statistical Learning - Chapter 3*
+---
+class: inverse, center, middle
+# Midterm review
 ---
 class: inverse, center, middle
 # Statistical Learning I
@@ -49,6 +53,36 @@ residuals = observed value - predicted value
 The observed values of price are given in the data. The predicted values of price come from our function.
 
 &lt;img src="intro_to_data_science_session_7_1_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Regression
+
+With simple linear regression, we assume a linear relationship between X and Y.
+
+**Parametric** 
+
+`$$\huge f(X) = \beta_{0} + \beta_{1}X_{1} + \beta_{2}X_{2} + \ldots + \beta_{p}X_{p}$$`
+
+We would love to know all of the `\(\Huge \beta\)` values, but we won't, so we estimate them:
+
+`$$\huge \hat{f}(X) = \hat{\beta}_{0} + \hat{\beta}_{1}X_{1} + \hat{\beta}_{2}X_{2} + \ldots + \hat{\beta}_{p}X_{p}$$`
+---
+### Regression assumptions
+
+- Linearity - the mean of our target is a linear combination of our features
+
+- Constant variance (homoskedasticity) - the error around the regression line should be constant
+
+- Independence - errors are independent and uncorrelated
+
+- No multicollinearity - uncorrelated features
+---
+### Regression solution
+
+For those who are curious, the coefficients `\(\Huge \hat{\beta}\)` are estimated like so:
+
+`$$\huge \hat{\beta} = (X^{T}X)^{-1}X^{T}y$$`
+
+where `\(\Huge X\)` is a matrix of all of our features, and `\(\Huge y\)` is our target
 ---
 ### Regression in R
 
@@ -397,7 +431,26 @@ glance(diam_mult_lm)
 ##        BIC     deviance df.residual
 ## 1 943798.7 125269642979       53935
 ```
+---
+### Interpreting coefficients
 
+Now that we have more than one feature in the model, we add a little verbiage to our interpretation to account for the *other* features.
+
+Ex: for every one unit increase in **carat**, the price increases, **on average**, by $10,234, **controlling for all other features**, i.e. assuming all other features are held constant.
+
+
+```r
+tidy(diam_mult_lm)
+```
+
+```
+##          term   estimate std.error  statistic       p.value
+## 1 (Intercept)  1921.1740 104.37341  18.406737  1.976728e-75
+## 2       carat 10233.9134  62.93665 162.606589  0.000000e+00
+## 3           x  -884.2091  40.47045 -21.848267 2.317412e-105
+## 4           y   166.0384  25.85842   6.421058  1.364520e-10
+## 5           z  -576.2035  39.28224 -14.668295  1.277069e-48
+```
 ---
 ### Pop Quiz
 
@@ -457,11 +510,6 @@ What did we learn?
 - How we measure the model's goodness-of-fit with the `adjusted` `\(\large R^2\)`
 
 - Basic multiple regression
-
----
-### This brings us too...
-
-the language of predictive modeling.
 
 ---
 class: inverse, center, middle

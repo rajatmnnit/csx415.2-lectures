@@ -4,6 +4,15 @@
     <title>Introduction to Data Science</title>
     <meta charset="utf-8">
     <meta name="author" content="Robert Clements" />
+    <script src="libs/htmlwidgets/htmlwidgets.js"></script>
+    <script src="libs/jquery/jquery.min.js"></script>
+    <link href="libs/leaflet/leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet/leaflet.js"></script>
+    <link href="libs/leafletfix/leafletfix.css" rel="stylesheet" />
+    <script src="libs/Proj4Leaflet/proj4-compressed.js"></script>
+    <script src="libs/Proj4Leaflet/proj4leaflet.js"></script>
+    <link href="libs/rstudio_leaflet/rstudio_leaflet.css" rel="stylesheet" />
+    <script src="libs/leaflet-binding/leaflet.js"></script>
     <link rel="stylesheet" href="rc_css.css" type="text/css" />
   </head>
   <body>
@@ -21,427 +30,259 @@ class: center, middle, inverse, title-slide
 
 ### Session 8.2 Outline
 
-- Statistical learning II
-  + Decision trees
-  + *Introduction to Statistical Learning - Chapter 8.1*
+- Spatial Data
+  + *Modern Data Science with R - Chapter 14*
 ---
 class: inverse, center, middle
-# Statistical Learning II
+# Spatial Data
 ---
-### Decision trees
+### Why spatial data?
 
-Hopefully you took a look at the awesome [Introduction to Machine Learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/)
+Example: Cholera in 1854 - back then it was believed that cholera was airborne. A physician named John Snow didn't buy it, and decided to dig into the data. The data might have looked like this:
 
-It summarizes 
-
-- the basic workings of decision trees
-
-- training and testing data
-
-- overfitting
-
----
-### Decision trees
-
-Also called Classification and Regression Trees (CART), can do 
-
-- classfication
-- regression (surprise, surprise)
-
-There are many variants, but each works essentially the same way - by splitting you data up into smaller buckets, such that the observations in each bucket are very similar to each other, or homogeneous.
-
----
-### Decision trees - regression
-
-Let's look at the `Hitters` data set from the `ISLR` package (or download it from Canvas).
-
-
-```r
-library(tidyverse)
-library(ISLR)
-glimpse(Hitters)
-```
 
 ```
-## Observations: 322
-## Variables: 20
-## $ AtBat     &lt;int&gt; 293, 315, 479, 496, 321, 594, 185, 298, 323, 401, 57...
-## $ Hits      &lt;int&gt; 66, 81, 130, 141, 87, 169, 37, 73, 81, 92, 159, 53, ...
-## $ HmRun     &lt;int&gt; 1, 7, 18, 20, 10, 4, 1, 0, 6, 17, 21, 4, 13, 0, 7, 3...
-## $ Runs      &lt;int&gt; 30, 24, 66, 65, 39, 74, 23, 24, 26, 49, 107, 31, 48,...
-## $ RBI       &lt;int&gt; 29, 38, 72, 78, 42, 51, 8, 24, 32, 66, 75, 26, 61, 1...
-## $ Walks     &lt;int&gt; 14, 39, 76, 37, 30, 35, 21, 7, 8, 65, 59, 27, 47, 22...
-## $ Years     &lt;int&gt; 1, 14, 3, 11, 2, 11, 2, 3, 2, 13, 10, 9, 4, 6, 13, 3...
-## $ CAtBat    &lt;int&gt; 293, 3449, 1624, 5628, 396, 4408, 214, 509, 341, 520...
-## $ CHits     &lt;int&gt; 66, 835, 457, 1575, 101, 1133, 42, 108, 86, 1332, 13...
-## $ CHmRun    &lt;int&gt; 1, 69, 63, 225, 12, 19, 1, 0, 6, 253, 90, 15, 41, 4,...
-## $ CRuns     &lt;int&gt; 30, 321, 224, 828, 48, 501, 30, 41, 32, 784, 702, 19...
-## $ CRBI      &lt;int&gt; 29, 414, 266, 838, 46, 336, 9, 37, 34, 890, 504, 186...
-## $ CWalks    &lt;int&gt; 14, 375, 263, 354, 33, 194, 24, 12, 8, 866, 488, 161...
-## $ League    &lt;fct&gt; A, N, A, N, N, A, N, A, N, A, A, N, N, A, N, A, N, A...
-## $ Division  &lt;fct&gt; E, W, W, E, E, W, E, W, W, E, E, W, E, E, E, W, W, W...
-## $ PutOuts   &lt;int&gt; 446, 632, 880, 200, 805, 282, 76, 121, 143, 0, 238, ...
-## $ Assists   &lt;int&gt; 33, 43, 82, 11, 40, 421, 127, 283, 290, 0, 445, 45, ...
-## $ Errors    &lt;int&gt; 20, 10, 14, 3, 4, 25, 7, 9, 19, 0, 22, 11, 7, 6, 8, ...
-## $ Salary    &lt;dbl&gt; NA, 475.000, 480.000, 500.000, 91.500, 750.000, 70.0...
-## $ NewLeague &lt;fct&gt; A, N, A, N, N, A, A, A, N, A, A, N, N, A, N, A, N, A...
+##           Date           Name     Address Age   Death
+## 1 Aug 31, 1854   Thomas Jones 26 Broad St  37 cholera
+## 2 Aug 31, 1854     Mary Jones 26 Broad St  11 cholera
+## 3  Oct 1, 1854 Martin Warwick 14 Broad St  23 cholera
 ```
 ---
-### `Salary` is our target variable
+### Why spatial data?
 
-
-```r
-Hitters %&gt;% ggplot(aes(x = Salary)) + 
-  geom_histogram() +
-  theme_bw()
-```
 
 &lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### `Salary` is our target variable
+### Spatial objects in R
+
+There are many types of spatial objects. `CholeraDeaths` is a `SpatialPointsDataFrame` object available in the `mdsr` R package. 
 
 
 ```r
-Hitters &lt;- Hitters %&gt;% mutate(log_salary = log(Salary)) %&gt;% filter(!is.na(log_salary))
-Hitters %&gt;% ggplot(aes(x = log_salary)) + 
-  geom_histogram() +
-  theme_bw()
+library(mdsr)
+glimpse(CholeraDeaths)
 ```
 
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+```
+## Formal class 'SpatialPointsDataFrame' [package "sp"] with 5 slots
+##   ..@ data       :'data.frame':	250 obs. of  2 variables:
+##   .. ..$ Id   : int [1:250] 0 0 0 0 0 0 0 0 0 0 ...
+##   .. ..$ Count: int [1:250] 3 2 1 1 4 2 2 2 3 2 ...
+##   ..@ coords.nrs : num(0) 
+##   ..@ coords     : num [1:250, 1:2] 529309 529312 529314 529317 529321 ...
+##   .. ..- attr(*, "dimnames")=List of 2
+##   ..@ bbox       : num [1:2, 1:2] 529160 180858 529656 181306
+##   .. ..- attr(*, "dimnames")=List of 2
+##   ..@ proj4string:Formal class 'CRS' [package "sp"] with 1 slot
+```
 ---
-### Decision trees - regression
+### Spatial objects in R
 
-Suppose we want to predict the log of `Salary` based on `Years` and `Hits`.
+Luckily, we can convert `CholeraDeaths` to a standard R data frame which will make plotting easier.
 
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+
+```r
+cholera_df &lt;- as.data.frame(CholeraDeaths)
+head(cholera_df)
+```
+
+```
+##   Id Count coords.x1 coords.x2
+## 1  0     3  529308.7  181031.4
+## 2  0     2  529312.2  181025.2
+## 3  0     1  529314.4  181020.3
+## 4  0     1  529317.4  181014.3
+## 5  0     4  529320.7  181007.9
+## 6  0     2  529336.7  181006.0
+```
 ---
-### Decision trees - regression
+### Wait, what happened to our coordinates?
 
-The **predicted value** is the average of `Salary` in each leaf node.
-
+When working with spatial data, we have to worry about **projections** - how do we convert locations in a 3-d geographic coordinate system to a 2-d representation. 
+.pull-left[
+Mercator preserves angles
 &lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
-
----
-### Decision trees - regression
-
+]
+.pull-right[
+Gall-Peters preserves area
 &lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+]
 ---
-### Decision trees - regression
+### Google map tiles
 
-We build a regression tree using two steps:
+Google map tiles are returned to R using the `espg:4326` system, which is the standard for GPS systems. We need to project our `CholeraDeaths` coordinates onto the same system. 
 
-1. We divide the predictor space — that is, the set of possible values for `\(X\)` into `\(J\)` distinct and non-overlapping regions, `\(R_{1}, R_{2}, ..., R_{J}\)`.
-  + These regions are also called *terminal nodes* or *leafs* of the tree
-  + They are the nodes at the very bottom of the tree in the tree diagram
+We can use the `spTransform()` and `CRS()` functions from the `rgdal` package to do this transformation. `spTransform` does the conversion, and `CRS` specifies the coordinate system using a smaller string.  
 
-2. For every observation that falls into the region `\(R_{J}\)`, we make the same prediction, which is simply the mean of the response values for the training observations in `\(R_{J}\)`.
-
----
-### Decision trees - regression
-
-For example:
-
-In our example we ended up with 7 regions based on `Years` and `Hits`. Whichever region an observation lands in will get a predicted value equal to the average value of all of the training observations in that region.
-
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
----
-### Decision trees - regression
-
-For example:
-
-In our example we ended up with 7 regions based on `Years` and `Hits`. Whichever region an observation lands in will get a predicted value equal to the average value of all of the training observations in that region.
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
----
-### How do we construct the trees?
-
-We use *top-down recursive binary splitting*.
-
-1. Start with all observations in one region
-
-2. Check every possible split point, from each feature, for splitting your observations into two regions
-
-3. Choose the split point that **reduces the sum of the squared residuals** the most
-
-4. Repeat 1-3 on each sub-region
-
-5. Keep going until some stopping criterion is reached, for example, until no region contains more than 5 observations
----
-### Growing the tree
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
----
-### Growing the tree
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
----
-### Growing the tree
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
----
-### Growing the tree
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
----
-### Decision trees - classification
-
-Let's look at the `Heart` data set (download it from Canvas).
+But first, our cholera data is in the `epsg:27700` system. We need to tell R this by using the `proj4string()` function. Without this, we can't convert correctly.
 
 
 ```r
-Heart &lt;- read_csv('../../demos/session_8/Heart.csv')
-glimpse(Heart)
-```
-
-```
-## Observations: 303
-## Variables: 14
-## $ Age       &lt;int&gt; 63, 67, 67, 37, 41, 56, 62, 57, 63, 53, 57, 56, 56, ...
-## $ Sex       &lt;int&gt; 1, 1, 1, 1, 0, 1, 0, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1...
-## $ ChestPain &lt;chr&gt; "typical", "asymptomatic", "asymptomatic", "nonangin...
-## $ RestBP    &lt;int&gt; 145, 160, 120, 130, 130, 120, 140, 120, 130, 140, 14...
-## $ Chol      &lt;int&gt; 233, 286, 229, 250, 204, 236, 268, 354, 254, 203, 19...
-## $ Fbs       &lt;int&gt; 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0...
-## $ RestECG   &lt;int&gt; 2, 2, 2, 0, 2, 0, 2, 0, 2, 2, 0, 2, 2, 0, 0, 0, 0, 0...
-## $ MaxHR     &lt;int&gt; 150, 108, 129, 187, 172, 178, 160, 163, 147, 155, 14...
-## $ ExAng     &lt;int&gt; 0, 1, 1, 0, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0...
-## $ Oldpeak   &lt;dbl&gt; 2.3, 1.5, 2.6, 3.5, 1.4, 0.8, 3.6, 0.6, 1.4, 3.1, 0....
-## $ Slope     &lt;int&gt; 3, 2, 2, 3, 1, 1, 3, 1, 2, 3, 2, 2, 2, 1, 1, 1, 3, 1...
-## $ Ca        &lt;int&gt; 0, 3, 2, 0, 0, 0, 2, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0...
-## $ Thal      &lt;chr&gt; "fixed", "normal", "reversable", "normal", "normal",...
-## $ AHD       &lt;chr&gt; "No", "Yes", "Yes", "No", "No", "No", "Yes", "No", "...
+library(rgdal)
+# specify the system for our spatial data
+proj4string(CholeraDeaths) &lt;- CRS("+init=epsg:27700")
 ```
 ---
-### Decision trees - classification
+### Conversion
 
-Our target variable is `AHD`, the presence of heart disease (Yes or No):
+```r
+# transform to new system
+cholera_latlong &lt;- CholeraDeaths %&gt;% spTransform(CRS("+init=epsg:4326"))
+head(cholera_latlong)
+```
+
+```
+##              coordinates Id Count
+## 1 (-0.1379301, 51.51342)  0     3
+## 2 (-0.1378831, 51.51336)  0     2
+## 3 (-0.1378529, 51.51332)  0     1
+## 4  (-0.137812, 51.51326)  0     1
+## 5  (-0.1377668, 51.5132)  0     4
+## 6 (-0.1375369, 51.51318)  0     2
+```
+---
+### Now we can plot it on a map
+
+We'll use the `ggmap` package to plot static maps.
+
+First, we collect the map tiles using `get_map()`.
+Second, we use `ggplot` to plot the map and add our spatial coordinates as points.
 
 
 ```r
-Heart %&gt;% count(AHD)
-```
+library(mdsr)
+library(ggmap)
+library(rgdal)
 
-```
-## # A tibble: 2 x 2
-##   AHD       n
-##   &lt;chr&gt; &lt;int&gt;
-## 1 No      164
-## 2 Yes     139
-```
+# get map tiles
+m &lt;- get_map('John Snow, London, England', zoom = 17, 
+             maptype = 'roadmap', source = 'google', urlonly = FALSE)
 
-We have 13 possible features, a mix of quantitative and categorical.
+snow &lt;- ggmap(m) + 
+  geom_point(data = as.data.frame(cholera_latlong), 
+             aes(x = coords.x1, y = coords.x2, size = Count))
 
+snow
+```
 ---
-### Decision trees in R
+### Geocoding
 
-Before we look at how decision trees work for classification, let's see how we do decision trees in R. For this we will use the `rpart` package.
+Geocoding is the process of converting a human-readable address into geographic coordinates.
+
+We can get latitudes and longitudes from an address by using the `geocode()` function from the `ggmap` package. 
 
 
 ```r
-install.packages('rpart')
-library(rpart)
+library(ggmap)
+ucb_ext &lt;- '160 Spear St, San Francisco, CA'
+geocode(ucb_ext)
+```
+
+```
+##         lon      lat
+## 1 -122.3937 37.79137
 ```
 ---
-### Decision trees in R
+### Slippy Maps 
 
-We will use the `rpart` function, which will have familiar looking arguments. First, load your data using `read_csv`:
+A slippy map is a map with a tiled base layer, with panning and zooming and other features that you supply.
+
+<div id="htmlwidget-28adb735c0df8ea56229" style="width:504px;height:252px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-28adb735c0df8ea56229">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[37.7913654,-122.3937412,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[37.7913654,37.7913654],"lng":[-122.3937412,-122.3937412]}},"evals":[],"jsHooks":[]}</script>
+---
+### Slippy Maps in R
+
+The `leaflet` R package is a wrapper for the `leaflet` javascript library. What that means is that we can use R to create slippy maps. Note that these are meant for **web maps**. You cannot interact with a map in *pdf* or *Word*. So, your homework this week will have to be turned in as an html file.
 
 
 ```r
-library(tidyverse)
-Heart &lt;- read_csv('path to csv file')
+library(leaflet)
+leaflet() %&gt;% addTiles()
 ```
+
+<div id="htmlwidget-1afc11ef5c230b031610" style="width:504px;height:252px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1afc11ef5c230b031610">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
+---
+### Slippy Maps in R
+
+Let's focus on SF
 
 
 ```r
-tree_mod0 &lt;- rpart(AHD ~ ., data = Heart)
+leaflet() %&gt;% 
+  setView(lng = -122.3937, lat = 37.79137, zoom = 14) %&gt;%
+  addTiles()
 ```
 
-What do you think the dot `.` is doing?
-
+<div id="htmlwidget-3954681b6b2d9294314e" style="width:504px;height:252px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3954681b6b2d9294314e">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[37.79137,-122.3937],14,[]],"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]}]},"evals":[],"jsHooks":[]}</script>
 ---
-### Decision trees in R
+### Slippy Maps in R
 
-This is the output from the model object:
+Let's add a marker for UC Berkeley Extension
 
 
 ```r
-tree_mod0
+# geocode uc berkeley extension
+ucb_geo &lt;- geocode(ucb_ext)
+
+map &lt;- leaflet() %&gt;%
+  addTiles() %&gt;%
+  addMarkers(lng = ~lon, lat = ~lat, data = ucb_geo)
+
+map
 ```
 
-```
-## n= 303 
-## 
-## node), split, n, loss, yval, (yprob)
-##       * denotes terminal node
-## 
-##  1) root 303 139 No (0.5412541 0.4587459)  
-##    2) Thal=normal 167  38 No (0.7724551 0.2275449)  
-##      4) ChestPain=nonanginal,nontypical 100   9 No (0.9100000 0.0900000) *
-##      5) ChestPain=asymptomatic,typical 67  29 No (0.5671642 0.4328358)  
-##       10) Ca&lt; 0.5 40   9 No (0.7750000 0.2250000) *
-##       11) Ca&gt;=0.5 27   7 Yes (0.2592593 0.7407407) *
-##    3) Thal=fixed,reversable 136  35 Yes (0.2573529 0.7426471)  
-##      6) ChestPain=nonanginal,nontypical,typical 46  21 No (0.5434783 0.4565217)  
-##       12) Ca&lt; 0.5 29   8 No (0.7241379 0.2758621) *
-##       13) Ca&gt;=0.5 17   4 Yes (0.2352941 0.7647059) *
-##      7) ChestPain=asymptomatic 90  10 Yes (0.1111111 0.8888889) *
-```
+<div id="htmlwidget-e4a080868f349fbec190" style="width:504px;height:252px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-e4a080868f349fbec190">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[37.7913654,-122.3937412,null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[37.7913654,37.7913654],"lng":[-122.3937412,-122.3937412]}},"evals":[],"jsHooks":[]}</script>
 ---
-### Decision trees in R
+### Slippy Maps for spatial data
 
-You can look at a summary:
+If we have a set of latitudes and longitudes, `leaflet()` also takes a `data` argument.
 
 
 ```r
-summary(tree_mod0)
+cholera_coords &lt;- as.data.frame(cholera_latlong)
+head(cholera_coords)
+```
+
+```
+##   Id Count  coords.x1 coords.x2
+## 1  0     3 -0.1379301  51.51342
+## 2  0     2 -0.1378831  51.51336
+## 3  0     1 -0.1378529  51.51332
+## 4  0     1 -0.1378120  51.51326
+## 5  0     4 -0.1377668  51.51320
+## 6  0     2 -0.1375369  51.51318
 ```
 ---
-### Decision trees in R
+### Slippy Maps for spatial data
 
-You can look at an awful plot:
+If we have a set of latitudes and longitudes, `leaflet()` also takes a `data` argument.
 
 
 ```r
-plot(tree_mod0)
-text(tree_mod0, use.n = TRUE)
+cholera_coords &lt;- cholera_coords %&gt;% transmute(latitude = coords.x1, longitude = coords.x2)
+
+cholera &lt;- leaflet(cholera_latlong) %&gt;%
+  addTiles() %&gt;%
+  addMarkers()
 ```
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Decision trees in R
-
-Or we can look at much nicer plots using the `partykit` package and converting our model to a `party` object.
+### Slippy Maps for spatial data
 
 
 ```r
-library(partykit)
-plot(as.party(tree_mod0))
+cholera
 ```
 
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+<div id="htmlwidget-3ba6ee842159d8f41d0b" style="width:504px;height:252px;" class="leaflet html-widget"></div>
+<script type="application/json" data-for="htmlwidget-3ba6ee842159d8f41d0b">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addTiles","args":["//{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"http://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"http://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addMarkers","args":[[51.5134177124172,51.5133613998342,51.5133170489738,51.5132621296606,51.5132039767177,51.5131835520485,51.5133591867692,51.5133280355029,51.5133229578595,51.5134266728971,51.5133811892354,51.5134623424476,51.5132159285183,51.5131694485925,51.5131164749112,51.5132396116239,51.5131644210432,51.5131781841165,51.5131111979614,51.5130554375432,51.5134413327101,51.5135924208041,51.5134023383083,51.5133795728564,51.513410781511,51.5136414526994,51.5136934269499,51.5137448755456,51.5136761001242,51.513589650219,51.5136630762747,51.5135023127246,51.5135825682104,51.513541316146,51.5132975437477,51.5132905255639,51.5130133334293,51.5129647596832,51.5128932509875,51.5129641586053,51.5130248397129,51.5130266757898,51.5128309621333,51.5128845609982,51.512526461566,51.5124652322484,51.5124282017241,51.5124146502324,51.5125095595528,51.5123779695186,51.5124468842647,51.5124910903494,51.5123735237671,51.5123394658191,51.5123641435114,51.5123186592339,51.5125404192213,51.512648600169,51.5126924102854,51.5129565492694,51.5127646786194,51.512780135276,51.5127261821783,51.5126812212502,51.5129138940919,51.5130464173057,51.5130736199273,51.5130871653118,51.5131217300639,51.5131870380734,51.5132144650686,51.5132493670279,51.5132712298232,51.5133000053292,51.513159501803,51.5130159068473,51.5129212632447,51.5128901273703,51.5128594972903,51.5128304407162,51.5127817133822,51.5127289953887,51.512868489997,51.5127227024346,51.5126544175993,51.5127129238493,51.5126151331328,51.5124909274326,51.512449001123,51.5124646732061,51.5124131425941,51.5123580283144,51.5122714848582,51.5123551037207,51.5119909705128,51.5120825390407,51.5120308435294,51.511969715045,51.5118816026324,51.5120498288562,51.5122501450068,51.5121617481752,51.5122122493473,51.5125728000173,51.5125753130745,51.512671783869,51.5127265275065,51.5127937521836,51.5128459418976,51.5128794716827,51.5129387875413,51.5127652622967,51.5128439493493,51.5125320092663,51.5121976542315,51.5122147337627,51.5131535576567,51.5130560038467,51.5131654276186,51.5130978234435,51.5132380800188,51.5132931133947,51.5133792266715,51.5134305977733,51.5134746492998,51.513421592435,51.5135280975109,51.513481380808,51.5135939675143,51.5132269067679,51.5131797922196,51.5131320343791,51.5130478021103,51.5130059829172,51.5128825050525,51.5132697651428,51.5134585203029,51.513431301037,51.5134020526073,51.5125929850428,51.5125846188892,51.5125545302917,51.5125207793547,51.5131371982402,51.513228105499,51.5131523869471,51.5132575922725,51.5135441147158,51.5136261147011,51.51363711464,51.5135240566799,51.513819503245,51.5137237779958,51.5137037259797,51.5138308609666,51.5139154145108,51.5135966548401,51.5140320770328,51.5138912073965,51.5137575614511,51.5140647728081,51.5141461334489,51.5142009244162,51.5142299752522,51.5143186433979,51.5143770664962,51.5143572324987,51.5143820227307,51.5144016914121,51.5145215552817,51.5144974265937,51.5144724263714,51.5145042399781,51.5145458084146,51.5145612191586,51.5145938592689,51.514581130254,51.5146055484873,51.5158344922563,51.5151947768411,51.515148910154,51.514818276315,51.5148434841345,51.5149136908635,51.5144955261107,51.5147432533526,51.514467034397,51.514453057596,51.5148446763327,51.5143888129264,51.5143992425991,51.5143350546395,51.5142241938589,51.5142200496112,51.5141451611806,51.5141081200325,51.5143589918305,51.5143258278403,51.5145439352589,51.5145694098648,51.5145860585039,51.5146120020105,51.5145748931058,51.5145068922349,51.5142738740676,51.5142925294013,51.5140584415022,51.5141479046669,51.5139612895256,51.514026681852,51.514075625164,51.5140955500651,51.5141341964856,51.5140332357038,51.51399639475,51.5139599546022,51.5139447099578,51.5138209431322,51.5139986643176,51.5137949340791,51.5137664510085,51.5137255314975,51.5136915654178,51.5136724428681,51.5136025045006,51.5134817494629,51.5134582133826,51.5134291944654,51.5134042540194,51.5133593215734,51.5133780414208,51.513854511423,51.5138745706322,51.5135649229409,51.5136162065225,51.5137422432042,51.5139182142438,51.5137723972996,51.5135021957619,51.5137121442364,51.513643808406,51.5137110723171,51.5140612381261,51.5147479928322,51.5147942645459,51.5145260811065,51.5147058764589,51.5123109173558,51.5119984599128,51.5118557192269],[-0.137930104010557,-0.137883080050043,-0.137852910334902,-0.137811953946547,-0.13776682625895,-0.137536941414194,-0.138200478229867,-0.138045001181023,-0.138276150015847,-0.138223486436163,-0.138337036751987,-0.138562712674585,-0.138425595569866,-0.138378445203786,-0.138337151287556,-0.138645453374908,-0.138697906588005,-0.137924280930384,-0.137864911517368,-0.137811483555299,-0.138761923444541,-0.138798841466148,-0.139044685640647,-0.138969769250852,-0.138863423701818,-0.138752495986868,-0.138808158700832,-0.138856026577997,-0.138886865385659,-0.139239358857342,-0.13932127341479,-0.139315996025543,-0.139615957798045,-0.139719311011435,-0.140073811518465,-0.139094018235715,-0.13969719300269,-0.139327083693066,-0.139317388053158,-0.139186819378375,-0.139035941034581,-0.139209112335763,-0.138427009719529,-0.138624089822381,-0.13809573873048,-0.138034566532033,-0.137983558408747,-0.138064861673808,-0.138193772599654,-0.13781768058354,-0.137655876664111,-0.137584251590896,-0.137650308280313,-0.137449685402355,-0.137375960345323,-0.137327183060384,-0.136979895082568,-0.137180471112417,-0.137052256705603,-0.137695283980724,-0.137532968405366,-0.137419027899659,-0.137367685597074,-0.137324900434834,-0.13753072078947,-0.13756170937264,-0.137465963095968,-0.137386069143822,-0.137305905402978,-0.137088921783477,-0.136996507652828,-0.136858967055842,-0.136777631573641,-0.13670521328998,-0.136493541498875,-0.136329609312799,-0.13642355437644,-0.136523354073943,-0.136599464715498,-0.136698903900388,-0.136818608892989,-0.136972720982157,-0.13635852222683,-0.136629907913101,-0.136584421189908,-0.136422562827327,-0.136345100970832,-0.136437423660872,-0.136377255936171,-0.136196885696964,-0.136141564934112,-0.136101691853672,-0.13603019775476,-0.136309771693643,-0.135940418807579,-0.135857833871399,-0.135800071388929,-0.135716761478811,-0.135119199651659,-0.135144413368991,-0.135393879321116,-0.135409196321426,-0.135472107671099,-0.135765474474458,-0.13587129725092,-0.135975667166644,-0.136032902456437,-0.136115157826193,-0.136180249325612,-0.136083007793063,-0.136139451247873,-0.135328712820307,-0.135122094886835,-0.134644707328384,-0.134521544053972,-0.13496689238324,-0.135098133618687,-0.134393575502607,-0.134505247562517,-0.134436800798234,-0.134593602630157,-0.134640476323922,-0.134708685062981,-0.134756193685838,-0.135244384441936,-0.134897297638676,-0.135157928194478,-0.135344164321286,-0.135063381103534,-0.135800950518772,-0.13576161034289,-0.135740195630197,-0.135644938517452,-0.135601712101864,-0.13550137997266,-0.135832121260455,-0.136048811687163,-0.136139629106658,-0.136227828987914,-0.134999321749233,-0.134792944843084,-0.134896134291146,-0.13499995822671,-0.133482869177093,-0.133265220914633,-0.133296159096639,-0.132933520033842,-0.133998061085642,-0.134041910097202,-0.134156125430805,-0.134091267691142,-0.134272307054501,-0.134220279673234,-0.134704077450268,-0.1347823322243,-0.135010480599383,-0.134923206586315,-0.134884697385023,-0.134212375301518,-0.13413525046192,-0.134364183806531,-0.134446761264502,-0.134479407284249,-0.13465781338051,-0.134367284903915,-0.134178675873201,-0.134159802982985,-0.134068743540175,-0.134085166112154,-0.133821454567768,-0.133922315573705,-0.133849801388977,-0.133725297875756,-0.133745361367268,-0.133675758620499,-0.133563506220195,-0.133466554504967,-0.133392911328955,-0.13447415999148,-0.135259025703631,-0.13539533964416,-0.136022252986944,-0.136804117171357,-0.13658336059377,-0.135652973903523,-0.135577955351805,-0.134859650909087,-0.134689584742692,-0.13481827258339,-0.135703556340338,-0.135561351789002,-0.135648690168136,-0.135415186294267,-0.135576357841223,-0.135356677740601,-0.135475413644983,-0.136226113608836,-0.136328132175019,-0.136222147739477,-0.13611744958406,-0.13603032610347,-0.136266512833731,-0.136421363235172,-0.136934565325728,-0.136930812044807,-0.136799217089535,-0.136779604473422,-0.136695911836955,-0.136712199114799,-0.136123239897924,-0.135958317916009,-0.135882661614175,-0.135787715898289,-0.135849408611936,-0.13600822222389,-0.136098773834616,-0.136169607538601,-0.135485063868566,-0.135374041226318,-0.135581830640019,-0.135679025987977,-0.135814477761582,-0.135904600280311,-0.135992150697614,-0.136216866756182,-0.136578747125891,-0.13667508400121,-0.136764348161167,-0.136876973157585,-0.13695294902936,-0.137230493796607,-0.136650546959065,-0.136502664677893,-0.13736659135294,-0.137421887399464,-0.137472256016921,-0.138300115934668,-0.137362664817636,-0.137995119447203,-0.138139258555061,-0.138239344033771,-0.138271816604015,-0.138082797902251,-0.137911683038597,-0.137707109451447,-0.137107740547768,-0.137064556384258,-0.138473542100727,-0.138123159327677,-0.137762148270564],null,null,null,{"interactive":true,"draggable":false,"keyboard":true,"title":"","alt":"","zIndexOffset":0,"opacity":1,"riseOnHover":false,"riseOffset":250},null,null,null,null,null,{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]}],"limits":{"lat":[51.5118557192269,51.5158344922563],"lng":[-0.140073811518465,-0.132933520033842]}},"evals":[],"jsHooks":[]}</script>
 ---
-### Classification trees
+### Play around with `leaflet()`
 
-Classification trees work the same way as regression trees, with two differences:
+You can add labels to the markers, you can add popups (`addPopups()`). Check out the examples from the help file.
 
-1. The split points are not chosen by **reducing the sum of the squared residuals**
-
-2. The prediction is not the **mean of the response values**
----
-### The gini index and entropy
-
-Recall that when we divide our data into regions, we want each region to be as homogeneous as possible (meaning that we want the target values to be as similar as possible). For categorical target variables, there are two metrics that we can use that try to estimate homogeneity:
-
-gini index: `$$\sum_{k = 1}^{K} \hat{p}_{k}(1-\hat{p}_{k})$$`
-
-entropy: `$$−\sum_{k = 1}^{K} \hat{p}_{k}\log{\hat{p}_{k}}$$`
-
-where `\(\hat{p}_{k}\)` is the proportion of observations in the region that belong to class `\(k\)`
----
-### The gini index and entropy
-
-Both of these are measures of node (or region) purity. Notice that:
-
-The gini index and entropy will both be close to zero if a high proportion of the observations in the region are the same class. 
-
-gini index: `$$\sum_{k = 1}^{K} \hat{p}_{k}(1-\hat{p}_{k})$$`
-
-entropy: `$$−\sum_{k = 1}^{K} \hat{p}_{k}\log{\hat{p}_{k}}$$`
----
-### Predictions
-
-The prediction for a classification tree can be done in one of two ways:
-
-1. Choose the category that is most prevalent in the terminal node
-2. Predict a "probability" using the proportion of observations in the terminal node that are equal to each category
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-22-1.png" style="display: block; margin: auto;" /&gt;
----
-### Predictions in R
-
-Predictions for our regression problem using the `Hitters` data set:
-
-
-```r
-Hitters &lt;- Hitters %&gt;% 
-  mutate(log_salary = log(Salary)) %&gt;% 
-  filter(!is.na(log_salary))
-
-tree_mod_reg &lt;- rpart(log_salary ~ Years + Hits, data = Hitters)
-
-preds_reg &lt;- predict(tree_mod_reg, newdata = Hitters)
-
-head(preds_reg)
-```
-
-```
-##        1        2        3        4        5        6 
-## 6.215037 5.263932 6.739687 4.727386 6.739687 4.727386
-```
----
-### Predictions in R
-
-We can take a look at a plot of our *observed values* versus our *predicted values*:
-
-
-```r
-Hitters$preds_reg &lt;- preds_reg
-ggplot(data = Hitters, aes(x = preds_reg, y = log_salary)) +
-  geom_point() +
-  labs(x = 'Predicted log salary', y = 'Actual log salary') +
-  theme_bw()
-```
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-24-1.png" style="display: block; margin: auto;" /&gt;
----
-### Pop quiz
-
-Why the strange patterns?
-
-&lt;img src="intro_to_data_science_session_8_2_files/figure-html/unnamed-chunk-25-1.png" style="display: block; margin: auto;" /&gt;
----
-### Predictions in R
-
-And this is what predictions look like from our classification problem using the `Heart` data:
-
-
-```r
-preds &lt;- predict(tree_mod0, newdata = Heart)
-head(preds)
-```
-
-```
-##          No       Yes
-## 1 0.7241379 0.2758621
-## 2 0.2592593 0.7407407
-## 3 0.1111111 0.8888889
-## 4 0.9100000 0.0900000
-## 5 0.9100000 0.0900000
-## 6 0.9100000 0.0900000
-```
----
-### Pros and cons of trees
-
-Pros:
-
-- easy to explain and interpret
-
-- for small trees, easy to visualize
-
-- can handle categorical features easily (linear regression models have to create dummy variables)
-
-- feature distributions don't matter because trees only consider the order of the values
-
-Cons:
-
-- overfit easily, not very robust
-
-- not as accurate as regression models
-
-*both of these cons can be alleviated using more advanced methods, such as a random forest*
 ---
 class: inverse, center, middle
 

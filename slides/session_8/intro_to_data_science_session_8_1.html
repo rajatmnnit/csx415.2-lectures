@@ -20,263 +20,428 @@ class: center, middle, inverse, title-slide
 
 ### Housekeeping
 
-- Final exams (homework) will be cumulative and will be in two parts:
+- Final exams (homework) will be cumulative, open note/book, and will be in two parts:
 
-  + Take home portion will be assigned next week in place of a homework assignment (Due by Friday April 6 at noon)
+  + Take home portion will be assigned next week in place of a homework assignment (Due by Friday August 10th at noon)
   
-  + In class portion will be completed in class on the last day (Apr 3), and due in class by 9:30PM. 
+  + In class portion will be completed in class on the last day (Aug 7), and due in class by 9:30PM. 
 
 - Any questions?
 
 ---
 ### Session 8.1 Outline
 
-- Statistical learning II
-  + Logistic regression
-  + *Introduction to Statistical Learning - Chapter 4.3*
+- R data structures
+- R functions and loops
+
 ---
 class: inverse, center, middle
-# Statistical Learning II
+# R Data Structures
 ---
-### Classification
+### We've been using these structures a lot:
 
-Suppose we are trying to predict the medical diagnosis of patients in an emergency room:
+- vectors:  all of the same type (character, numeric, etc.)
 
-- `stroke`
-- `drug overdose`
-- `epileptic seizure`
-
-given a set of features `\(X\)`.
-
-We want to find either
-
-`$$Y \sim f(X)$$`
-
-or
-
-`$$P(Y = y) \sim f(X)$$`
-
-where `\(Y\)` is a categorical variable, and `\(y\)` are the possible categories.
----
-### Question: why not just use Linear Regression?
-
-Why can't we simply encode each category as a number, say:
-
-- 0 = `stroke` 
-- 1 = `drug overdose`
-- 2 = `epileptic seizure`
-
-and use that as our target and fit a linear regression model and round our predicted value up or down to the nearest category?
-
----
-### Question: why not just use Linear Regression?
-
-Two **main** reasons we shouldn't do this: 
-
-- more than two categories: distance between multiple categories isn't meaningful
-
-- two categories: predictions cannot be interpreted as probabilities
----
-### Logistic regression
-
-One of the simplest methods for predicting probabilities for a *binary* target is **logistic regression**. 
-
-`$$P(Y = y | X)$$`
-
-Once you have predicted probabilities, you can perform classification (predicting the category) using probability thresholds.
-
-`$$P(Y = y | X) \geq p \Rightarrow Y = y$$`
----
-### Follow along
-
-Either install the `ISLR` package and load the `Default` data set, or download it from Canvas.
 
 
 ```r
-library(ISLR)
-library(tidyverse)
-library(broom)
-glimpse(Default)
+x &lt;- c(1,2,3, 11, 12, 13)
+x
 ```
 
 ```
-## Observations: 10,000
-## Variables: 4
-## $ default &lt;fct&gt; No, No, No, No, No, No, No, No, No, No, No, No, No, No...
-## $ student &lt;fct&gt; No, Yes, No, No, No, Yes, No, Yes, No, No, Yes, Yes, N...
-## $ balance &lt;dbl&gt; 729.5265, 817.1804, 1073.5492, 529.2506, 785.6559, 919...
-## $ income  &lt;dbl&gt; 44361.625, 12106.135, 31767.139, 35704.494, 38463.496,...
+## [1]  1  2  3 11 12 13
 ```
----
-### The Default data
 
-We want to predict which customers will default on their credit card debt given their credit card balance:
-
-`$$P(\text{default} = \text{Yes} | \text{balance})$$`
----
-### Visualize it
+- data frames: two-dimensional; columns can be of different types 
 
 
 ```r
-Default %&gt;% ggplot(aes(x = default, y = balance)) +
-  geom_boxplot()
+my_df &lt;- data.frame(x)
+my_df
 ```
 
-&lt;img src="intro_to_data_science_session_8_1_files/figure-html/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /&gt;
+```
+##    x
+## 1  1
+## 2  2
+## 3  3
+## 4 11
+## 5 12
+## 6 13
+```
 ---
-### Linear regression
+### We've been using these structures a lot:
+
+- tibbles: similar to data frames
 
 
 ```r
-Default &lt;- Default %&gt;% mutate(default_num = case_when(
-  default == 'Yes' ~ 1,
-  default == 'No' ~ 0
-))
-
-lm_mod &lt;- lm(default_num ~ balance, data = Default)
-
-tidy(lm_mod)
+my_tbl &lt;- as_tibble(x)
+my_tbl
 ```
 
 ```
-##          term      estimate    std.error statistic       p.value
-## 1 (Intercept) -0.0751919588 3.354360e-03 -22.41618 1.262551e-108
-## 2     balance  0.0001298722 3.474933e-06  37.37401 2.774969e-286
+## # A tibble: 6 x 1
+##   value
+##   &lt;dbl&gt;
+## 1  1.00
+## 2  2.00
+## 3  3.00
+## 4 11.0 
+## 5 12.0 
+## 6 13.0
 ```
 ---
-### Linear regression
+### There are two other very common types: matrix and list
+
+- matrix: two-dimensional; all same type
 
 
 ```r
-Default &lt;- Default %&gt;% mutate(preds = predict(lm_mod))
-Default %&gt;% ggplot(aes(x = balance, y = default_num, color = default)) +
-  geom_point() +
-  geom_line(aes(y = preds)) +
-  labs(y = 'Probabilities') +
-  theme_bw()
+mdat &lt;- matrix(x, nrow = 2, ncol = 3, byrow = TRUE)
+mdat
 ```
 
-&lt;img src="intro_to_data_science_session_8_1_files/figure-html/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /&gt;
+```
+##      [,1] [,2] [,3]
+## [1,]    1    2    3
+## [2,]   11   12   13
+```
+
 ---
-### Logistic regression
+### There are two other very common types: matrix and list
 
-This is the model we are fitting:
-
-`$$P(Y = y | X) = \frac{e^{\beta_{0} + \beta_{1}X_{1}}}{1+e^{\beta_{0} + \beta_{1}X_{1}}}$$`
-
-We estimate the coefficients using *maximum likelihood*. We will not be covering this here - read the text for details.
----
-### Logistic regression
-
-We will use the base R function called `glm`, which stands for *generalized linear model*. It works similarly to `lm`, with one main difference: 
-
-we must specify a model *family*. 
+- matrix: two-dimensional; all same type
 
 
 ```r
-logit_mod &lt;- glm(default ~ balance, data = Default, 
-                 family = 'binomial')
+mdat &lt;- matrix(x, nrow = 2, ncol = 3, byrow = FALSE)
+mdat
+```
+
+```
+##      [,1] [,2] [,3]
+## [1,]    1    3   12
+## [2,]    2   11   13
 ```
 ---
-### Aside
+### There are two other very common types: matrix and list
 
-Generalized linear models (GLM) is a very broad topic beyond the scope of this course, but basically we can fit *linear* models using different types of target variables (categorical, counts, continuous, exponential, etc.). 
-
-GLM's are more commonly used for statistical inference than for predictive modeling.
----
-### Use the `broom` package to look at your model
-
-We see similar model output as what we saw with the linear regression model:
-
-- features
-- estimates
-- standard error of our estimates
-- statistics
-- p-values
+A `list` is a generic vector containing other objects.
 
 
 ```r
-library(broom)
-tidy(logit_mod)
+my_list &lt;- list(a = c(1,2,3), 
+                b = c('a', 'b', 'c'), 
+                c = tibble(x = c(3,2,1), y = c('b', 'd', 'f')))
+my_list
 ```
 
 ```
-##          term      estimate    std.error statistic       p.value
-## 1 (Intercept) -10.651330614 0.3611573721 -29.49221 3.623124e-191
-## 2     balance   0.005498917 0.0002203702  24.95309 1.976602e-137
+## $a
+## [1] 1 2 3
+## 
+## $b
+## [1] "a" "b" "c"
+## 
+## $c
+## # A tibble: 3 x 2
+##       x y    
+##   &lt;dbl&gt; &lt;chr&gt;
+## 1  3.00 b    
+## 2  2.00 d    
+## 3  1.00 f
 ```
 ---
-### Make predictions
+### R `list` structures
 
-Get **predicted probabilities** like this:
-
-`$$\hat{P}(\text{default} = \text{Yes} | \text{balance} = 1100) = \frac{e^{0.0055 - 10.65\times1100}}{1 + e^{0.0055 - 10.65\times1100}}$$`
-
-In R, making predictions with GLM's is similar to the linear regression model, with only one difference:
-
-we must specify the *type* of prediction.
+They are similar to python `dictionaries` (key-value pairs). If you want to see the keys, you can use the `names()` function.
 
 
 ```r
-predict(logit_mod, newdata = Default, type = 'response')
+names(my_list)
+```
+
+```
+## [1] "a" "b" "c"
 ```
 ---
-### Visualize the predictions
+### R `list` structures
+
+Extract elements of a list:
+
+- by name: `$` or `[[]]`
+- by position: `[[]]`
 
 
 ```r
-sim_balance &lt;- tibble(seq(min(Default$balance), max(Default$balance), length.out = 1000))
-names(sim_balance) &lt;- 'balance'
-sim_balance &lt;- sim_balance %&gt;% mutate(preds = 
-                                        predict(logit_mod, type = 'response', newdata = sim_balance))
-sim_balance %&gt;% ggplot(aes(x = balance, y = preds)) +
-  geom_line() +
-  geom_point(data = Default, aes(y = default_num, color = default)) +
-  labs(y = 'Probabilities') +
-  theme_bw()
+my_list[['a']]
 ```
 
-&lt;img src="intro_to_data_science_session_8_1_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
+```
+## [1] 1 2 3
+```
+
+```r
+my_list$a
+```
+
+```
+## [1] 1 2 3
+```
+
+```r
+my_list[[1]]
+```
+
+```
+## [1] 1 2 3
+```
 ---
-### Interpreting coefficients
-
-Although we are using a linear combination of features, the relationship between our features and the predicted probability is not a linear one.
-
-Instead, we can say: an increase in credit card balance is associated with an increased probability of default.
-
-More technically, we would say: *a one dollar increase in the credit card balance increases the log-odds of default by .005*...but then we'd have to talk about log-odds.
+### Many, many functions in R return `list`-type objects
 
 
 ```r
-tidy(logit_mod)
+my_lm &lt;- lm(price ~ carat, data = diamonds)
+names(my_lm)
 ```
 
 ```
-##          term      estimate    std.error statistic       p.value
-## 1 (Intercept) -10.651330614 0.3611573721 -29.49221 3.623124e-191
-## 2     balance   0.005498917 0.0002203702  24.95309 1.976602e-137
+##  [1] "coefficients"  "residuals"     "effects"       "rank"         
+##  [5] "fitted.values" "assign"        "qr"            "df.residual"  
+##  [9] "xlevels"       "call"          "terms"         "model"
 ```
----
-### Logistic regression
-
-Similar to linear regression we can:
-
-- use categorical features in our model and interpret them similarly
-
-`$$P(\text{default} = \text{Yes} | \text{student})$$`
-
-- include more than one feature in the model
-
-`$$P(\text{default} = \text{Yes} | \text{student, balance})$$`
-
-Dissimilar to linear regression we can:
-
-- Have more than two categories in our target variable
 
 ---
-### Pop quiz
+### Many, many functions in R return `list`-type objects
 
-Add `student` to the model and interpret the coefficients.
+
+```r
+my_lm[['coefficients']]
+```
+
+```
+## (Intercept)       carat 
+##   -2256.361    7756.426
+```
+
+```r
+my_lm$coefficients
+```
+
+```
+## (Intercept)       carat 
+##   -2256.361    7756.426
+```
+
+```r
+my_lm[[1]]
+```
+
+```
+## (Intercept)       carat 
+##   -2256.361    7756.426
+```
+---
+### Tibbles with `list` columns
+
+Remember this from last time?
+
+
+```r
+n &lt;- 1000 #how many samples
+slopes &lt;- rep(NA, n) # empty vector for saving coefficients
+for(i in 1:n) {
+  diam_samp &lt;- diamonds %&gt;% sample_n(10000) # random sample
+  diam_samp_lm &lt;- lm(price ~ carat, data = diam_samp)
+  slopes[i] &lt;- coef(diam_samp_lm)[2] # store the coefficient
+}
+slopes &lt;- as_tibble(slopes)
+slopes
+```
+
+```
+## # A tibble: 1,000 x 1
+##    value
+##    &lt;dbl&gt;
+##  1  7690
+##  2  7847
+##  3  7785
+##  4  7787
+##  5  7836
+##  6  7793
+##  7  7791
+##  8  7808
+##  9  7756
+## 10  7765
+## # ... with 990 more rows
+```
+---
+### Tibbles with `list` columns
+
+Let's do the same thing, but let's save our 1000 samples, models, and slopes all in one tibble. 
+
+
+```r
+n &lt;- 1000 #how many samples
+slopes &lt;- rep(NA, n) # empty vector for saving coefficients
+my_mods &lt;- my_samps &lt;- list() # empty lists for saving models and samples
+for(i in 1:n) {
+  diam_samp &lt;- diamonds %&gt;% sample_n(1000) # random sample
+  diam_samp_lm &lt;- lm(price ~ carat, data = diam_samp)
+  slopes[i] &lt;- coef(diam_samp_lm)[2] # store the coefficient
+  my_mods[[i]] &lt;- diam_samp_lm
+  my_samps[[i]] &lt;- diam_samp
+}
+all_results &lt;- tibble(my_samps, my_mods, slopes)
+```
+---
+### Tibbles with `list` columns
+
+Let's do the same thing, but let's save our 1000 samples, models, and slopes all in one tibble. 
+
+
+```r
+all_results
+```
+
+```
+## # A tibble: 1,000 x 3
+##    my_samps              my_mods  slopes
+##    &lt;list&gt;                &lt;list&gt;    &lt;dbl&gt;
+##  1 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7706
+##  2 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7644
+##  3 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7755
+##  4 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   8034
+##  5 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   8010
+##  6 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7971
+##  7 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7810
+##  8 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7487
+##  9 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   8073
+## 10 &lt;tibble [1,000 x 10]&gt; &lt;S3: lm&gt;   7728
+## # ... with 990 more rows
+```
+---
+class: inverse, center, middle
+# R Functions and Loops
+---
+### Defining R functions
+
+I want to run this code over and over again, but maybe I want to be able to modify the sample size, or the x variable in my regression model - this seems like the perfect time to talk about **functions**!!
+
+
+```r
+diam_samp &lt;- diamonds %&gt;% sample_n(1000) # random sample
+diam_samp_lm &lt;- lm(price ~ carat, data = diam_samp)
+slopes &lt;- coef(diam_samp_lm)[2] # store the coefficient
+```
+---
+### Defining R functions
+
+Each function could (but not must) have inputs and outputs:
+
+
+```r
+# name your function
+name_of_function &lt;- function(input arguments) { # define input arguments 
+  R code here
+  ...
+  return(what you want to return) # explicitly return something
+}
+
+# call the function
+name_of_function(input arguments)
+
+# or assign the output
+output_name &lt;- name_of_function(input arguments)
+```
+---
+### Defining R functions
+
+
+```r
+fit_model &lt;- function(samp_size) {
+  diam_samp &lt;- diamonds %&gt;% sample_n(samp_size) # random sample
+  diam_samp_lm &lt;- lm(price ~ carat, data = diam_samp)
+  slopes &lt;- coef(diam_samp_lm)[2] # store the coefficient
+  return(slopes)
+}
+
+# call function
+fit_model(100)
+```
+
+```
+##    carat 
+## 7879.667
+```
+---
+### Defining R functions
+
+Let's do the same for our regression model formula. We want to be able to pass to the function the name of the predictor variable: `price ~ ____`. 
+
+Easiest way to help us do this is to use the `paste0` function.
+
+
+```r
+predictor &lt;- 'carat'
+mod_formula &lt;- paste0('price ~ ', predictor)
+mod_formula
+```
+
+```
+## [1] "price ~ carat"
+```
+---
+### Pop Quiz
+
+Write a function that takes two arguments: (1) samp_size - sample size; (2) x_var - predictor variable. This function should take a sample from the diamonds data set of size `samp_size`, fit a regression model predicting `price` from `x_var`, and then return the slope coefficient from that model.
+
+
+---
+### Pop Quiz
+
+Modify your function so that it returns not just the slopes, but also the model and the sample of data, in a list.
+
+
+---
+### R `for` loops
+
+I want to call this function over and over again and save all of the results - this seems like the perfect time to talk about **loops**!
+
+We will only talk about `for` loops
+
+```r
+# create space for the output of your loop 
+output_vector &lt;- rep(NA, length of loop)
+
+# start the loop
+for(index in some sequence of values) {
+  R code here
+  ...
+  output_vector[index] &lt;- output # save the output for each iteration
+}
+```
+---
+### Pop Quiz
+
+Using a `for` loop, run the function we just created 3 times, use a sample of size 100 and `carat` as our predictor, save the results, and then put them in a tibble.
+
+
+```r
+n &lt;- 3
+slopes &lt;- rep(NA, n) # empty vector for saving coefficients
+my_mods &lt;- my_samps &lt;- list() # empty lists for saving models and samples
+for(i in 1:n) {
+  my_result &lt;- fit_model(100, 'carat')
+  
+  # extract the slope and store it in slopes
+  # store the model in my_mods
+  # store the sample in my_samps
+}
+all_results &lt;- tibble(my_samps, my_mods, slopes)
+```
 
 
 ---

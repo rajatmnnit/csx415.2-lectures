@@ -22,365 +22,209 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
 
 ### Session 8.2 Outline
 
-- Statistical learning II
-  + Decision trees
-  + *Introduction to Statistical Learning - Chapter 8.1*
+- Spatial Data
+  + *Modern Data Science with R - Chapter 14*
 ---
 class: inverse, center, middle
-# Statistical Learning II
+# Spatial Data
 ---
-### Decision trees
+### Why spatial data?
 
-Hopefully you took a look at the awesome [Introduction to Machine Learning](http://www.r2d3.us/visual-intro-to-machine-learning-part-1/)
-
-It summarizes 
-
-- the basic workings of decision trees
-
-- training and testing data
-
-- overfitting
-
----
-### Decision trees
-
-Also called Classification and Regression Trees (CART), can do 
-
-- classfication
-- regression (surprise, surprise)
-
-There are many variants, but each works essentially the same way - by splitting you data up into smaller buckets, such that the observations in each bucket are very similar to each other, or homogeneous.
-
----
-### Decision trees - regression
-
-Let's look at the `Hitters` data set from the `ISLR` package (or download it from Canvas).
-
-```{r, message = FALSE, warning=FALSE}
-library(tidyverse)
-library(ISLR)
-glimpse(Hitters)
-```
----
-### `Salary` is our target variable
-
-```{r}
-Hitters %>% ggplot(aes(x = Salary)) + 
-  geom_histogram() +
-  theme_bw()
-```
----
-### `Salary` is our target variable
-
-```{r}
-Hitters <- Hitters %>% mutate(log_salary = log(Salary)) %>% filter(!is.na(log_salary))
-Hitters %>% ggplot(aes(x = log_salary)) + 
-  geom_histogram() +
-  theme_bw()
-```
----
-### Decision trees - regression
-
-Suppose we want to predict the log of `Salary` based on `Years` and `Hits`.
-
-```{r, warning = FALSE, message = FALSE, fig.asp=1, echo = FALSE}
-library(rpart)
-library(partykit)
-tree_mod <- rpart(log_salary ~ Years + Hits, data = Hitters)
-tree_mod1 <- rpart(log_salary ~ Years + Hits, data = Hitters, control = rpart.control(maxdepth = 1))
-tree_mod2 <- rpart(log_salary ~ Years + Hits, data = Hitters, control = rpart.control(maxdepth = 2))
-tree_mod3 <- rpart(log_salary ~ Years + Hits, data = Hitters, control = rpart.control(maxdepth = 3))
-plot(as.party(tree_mod))
-```
----
-### Decision trees - regression
-
-The **predicted value** is the average of `Salary` in each leaf node.
+Example: Cholera in 1854 - back then it was believed that cholera was airborne. A physician named John Snow didn't buy it, and decided to dig into the data. The data might have looked like this:
 
 ```{r, echo = FALSE}
-plot(as.party(tree_mod))
-```
-
----
-### Decision trees - regression
-
-```{r, echo = FALSE, fig.asp = 1}
-hits <- c(0, 50.5, 114, 117.5)
-hits_end <- c(117.5, 50.5, 114, 117.5)
-
-years <- c(6, 6, 0, 4.5)
-years_end <- c(6, 24, 3.5, 24)
-
-segs <- tibble(hits, hits_end, years, years_end)
-
-Hitters %>% ggplot(aes(x = Hits, y = Years)) +
-  geom_point(aes(color = log_salary)) +
-  geom_hline(yintercept = 4.5, size = 2, alpha = .5) +
-  geom_hline(yintercept = 3.5, size = 2, alpha = .5) +
-  geom_segment(data = segs, aes(x=hits, xend=hits_end, y=years, yend=years_end), size = 2, alpha = .5) +
-  theme_bw()
+chol <- data.frame(Date = c('Aug 31, 1854', 'Aug 31, 1854', 'Oct 1, 1854'),
+                   Name = c('Thomas Jones', 'Mary Jones', 'Martin Warwick'),
+                   Address = c('26 Broad St', '26 Broad St', '14 Broad St'),
+                   Age = c(37, 11, 23), 
+                   Death = c('cholera', 'cholera', 'cholera'))
+chol
 ```
 ---
-### Decision trees - regression
-
-We build a regression tree using two steps:
-
-1. We divide the predictor space — that is, the set of possible values for $X$ into $J$ distinct and non-overlapping regions, $R_{1}, R_{2}, ..., R_{J}$.
-  + These regions are also called *terminal nodes* or *leafs* of the tree
-  + They are the nodes at the very bottom of the tree in the tree diagram
-
-2. For every observation that falls into the region $R_{J}$, we make the same prediction, which is simply the mean of the response values for the training observations in $R_{J}$.
-
----
-### Decision trees - regression
-
-For example:
-
-In our example we ended up with 7 regions based on `Years` and `Hits`. Whichever region an observation lands in will get a predicted value equal to the average value of all of the training observations in that region.
+### Why spatial data?
 
 
-```{r, echo = FALSE}
-plot(as.party(tree_mod))
+```{r, echo = FALSE, warning=FALSE, message=FALSE, fig.asp = .8}
+library(mdsr)
+library(ggmap)
+library(rgdal)
+m <- get_map('John Snow, London, England', zoom = 17, maptype = 'roadmap', source = 'google', urlonly = FALSE)
+proj4string(CholeraDeaths) <- CRS("+init=epsg:27700")
+cholera_latlong <- CholeraDeaths %>% spTransform(CRS("+init=epsg:4326"))
+snow <- ggmap(m) + geom_point(data = as.data.frame(cholera_latlong), aes(x = coords.x1, y = coords.x2, size = Count))
+snow
 ```
 ---
-### Decision trees - regression
+### Spatial objects in R
 
-For example:
-
-In our example we ended up with 7 regions based on `Years` and `Hits`. Whichever region an observation lands in will get a predicted value equal to the average value of all of the training observations in that region.
-
-```{r, echo = FALSE}
-Hitters %>% ggplot(aes(x = Hits, y = Years)) +
-  geom_point(aes(color = log_salary)) +
-  geom_hline(yintercept = 4.5, size = 2, alpha = .5) +
-  geom_hline(yintercept = 3.5, size = 2, alpha = .5) +
-  geom_segment(data = segs, aes(x=hits, xend=hits_end, y=years, yend=years_end), size = 2, alpha = .5) +
-  theme_bw()
-```
----
-### How do we construct the trees?
-
-We use *top-down recursive binary splitting*.
-
-1. Start with all observations in one region
-
-2. Check every possible split point, from each feature, for splitting your observations into two regions
-
-3. Choose the split point that **reduces the sum of the squared residuals** the most
-
-4. Repeat 1-3 on each sub-region
-
-5. Keep going until some stopping criterion is reached, for example, until no region contains more than 5 observations
----
-### Growing the tree
-
-```{r, echo = FALSE}
-plot(as.party(tree_mod1))
-```
----
-### Growing the tree
-
-```{r, echo = FALSE}
-plot(as.party(tree_mod2))
-```
----
-### Growing the tree
-
-```{r, echo = FALSE}
-plot(as.party(tree_mod3))
-```
----
-### Growing the tree
-
-```{r, echo = FALSE}
-plot(as.party(tree_mod))
-```
----
-### Decision trees - classification
-
-Let's look at the `Heart` data set (download it from Canvas).
-
-```{r, message = FALSE, warning=FALSE}
-Heart <- read_csv('../../demos/session_8/Heart.csv')
-glimpse(Heart)
-```
----
-### Decision trees - classification
-
-Our target variable is `AHD`, the presence of heart disease (Yes or No):
+There are many types of spatial objects. `CholeraDeaths` is a `SpatialPointsDataFrame` object available in the `mdsr` R package. 
 
 ```{r}
-Heart %>% count(AHD)
-```
-
-We have 13 possible features, a mix of quantitative and categorical.
-
----
-### Decision trees in R
-
-Before we look at how decision trees work for classification, let's see how we do decision trees in R. For this we will use the `rpart` package.
-
-```{r, eval = FALSE}
-install.packages('rpart')
-library(rpart)
+library(mdsr)
+glimpse(CholeraDeaths)
 ```
 ---
-### Decision trees in R
+### Spatial objects in R
 
-We will use the `rpart` function, which will have familiar looking arguments. First, load your data using `read_csv`:
-
-```{r, eval = FALSE}
-library(tidyverse)
-Heart <- read_csv('path to csv file')
-```
+Luckily, we can convert `CholeraDeaths` to a standard R data frame which will make plotting easier.
 
 ```{r}
-tree_mod0 <- rpart(AHD ~ ., data = Heart)
+cholera_df <- as.data.frame(CholeraDeaths)
+head(cholera_df)
 ```
-
-What do you think the dot `.` is doing?
-
 ---
-### Decision trees in R
+### Wait, what happened to our coordinates?
 
-This is the output from the model object:
+When working with spatial data, we have to worry about **projections** - how do we convert locations in a 3-d geographic coordinate system to a 2-d representation. 
+.pull-left[
+Mercator preserves angles
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.asp = 1}
+library(maps)
+map("world", projection = 'mercator', wrap = TRUE)
+```
+]
+.pull-right[
+Gall-Peters preserves area
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.asp = 1}
+map("world", projection = 'cylequalarea', param = 45, wrap = TRUE)
+```
+]
+---
+### Google map tiles
+
+Google map tiles are returned to R using the `espg:4326` system, which is the standard for GPS systems. We need to project our `CholeraDeaths` coordinates onto the same system. 
+
+We can use the `spTransform()` and `CRS()` functions from the `rgdal` package to do this transformation. `spTransform` does the conversion, and `CRS` specifies the coordinate system using a smaller string.  
+
+But first, our cholera data is in the `epsg:27700` system. We need to tell R this by using the `proj4string()` function. Without this, we can't convert correctly.
 
 ```{r}
-tree_mod0
+library(rgdal)
+# specify the system for our spatial data
+proj4string(CholeraDeaths) <- CRS("+init=epsg:27700")
 ```
 ---
-### Decision trees in R
-
-You can look at a summary:
-
-```{r, eval = FALSE}
-summary(tree_mod0)
+### Conversion
+```{r}
+# transform to new system
+cholera_latlong <- CholeraDeaths %>% spTransform(CRS("+init=epsg:4326"))
+head(cholera_latlong)
 ```
 ---
-### Decision trees in R
+### Now we can plot it on a map
 
-You can look at an awful plot:
+We'll use the `ggmap` package to plot static maps.
 
-```{r, eval = TRUE}
-plot(tree_mod0)
-text(tree_mod0, use.n = TRUE)
+First, we collect the map tiles using `get_map()`.
+Second, we use `ggplot` to plot the map and add our spatial coordinates as points.
+
+```{r, echo = TRUE, warning=FALSE, message=FALSE, fig.asp = .8, eval = FALSE}
+library(mdsr)
+library(ggmap)
+library(rgdal)
+
+# get map tiles
+m <- get_map('John Snow, London, England', zoom = 17, 
+             maptype = 'roadmap', source = 'google', urlonly = FALSE)
+
+snow <- ggmap(m) + 
+  geom_point(data = as.data.frame(cholera_latlong), 
+             aes(x = coords.x1, y = coords.x2, size = Count))
+
+snow
 ```
 ---
-### Decision trees in R
+### Geocoding
 
-Or we can look at much nicer plots using the `partykit` package and converting our model to a `party` object.
+Geocoding is the process of converting a human-readable address into geographic coordinates.
+
+We can get latitudes and longitudes from an address by using the `geocode()` function from the `ggmap` package. 
 
 ```{r}
-library(partykit)
-plot(as.party(tree_mod0))
+library(ggmap)
+ucb_ext <- '160 Spear St, San Francisco, CA'
+geocode(ucb_ext)
 ```
 ---
-### Classification trees
+### Slippy Maps 
 
-Classification trees work the same way as regression trees, with two differences:
-
-1. The split points are not chosen by **reducing the sum of the squared residuals**
-
-2. The prediction is not the **mean of the response values**
----
-### The gini index and entropy
-
-Recall that when we divide our data into regions, we want each region to be as homogeneous as possible (meaning that we want the target values to be as similar as possible). For categorical target variables, there are two metrics that we can use that try to estimate homogeneity:
-
-gini index: $$\sum_{k = 1}^{K} \hat{p}_{k}(1-\hat{p}_{k})$$
-
-entropy: $$−\sum_{k = 1}^{K} \hat{p}_{k}\log{\hat{p}_{k}}$$
-
-where $\hat{p}_{k}$ is the proportion of observations in the region that belong to class $k$
----
-### The gini index and entropy
-
-Both of these are measures of node (or region) purity. Notice that:
-
-The gini index and entropy will both be close to zero if a high proportion of the observations in the region are the same class. 
-
-gini index: $$\sum_{k = 1}^{K} \hat{p}_{k}(1-\hat{p}_{k})$$
-
-entropy: $$−\sum_{k = 1}^{K} \hat{p}_{k}\log{\hat{p}_{k}}$$
----
-### Predictions
-
-The prediction for a classification tree can be done in one of two ways:
-
-1. Choose the category that is most prevalent in the terminal node
-2. Predict a "probability" using the proportion of observations in the terminal node that are equal to each category
-
-```{r, echo=FALSE}
-plot(as.party(tree_mod0))
-```
----
-### Predictions in R
-
-Predictions for our regression problem using the `Hitters` data set:
-
-```{r}
-Hitters <- Hitters %>% 
-  mutate(log_salary = log(Salary)) %>% 
-  filter(!is.na(log_salary))
-
-tree_mod_reg <- rpart(log_salary ~ Years + Hits, data = Hitters)
-
-preds_reg <- predict(tree_mod_reg, newdata = Hitters)
-
-head(preds_reg)
-```
----
-### Predictions in R
-
-We can take a look at a plot of our *observed values* versus our *predicted values*:
-
-```{r}
-Hitters$preds_reg <- preds_reg
-ggplot(data = Hitters, aes(x = preds_reg, y = log_salary)) +
-  geom_point() +
-  labs(x = 'Predicted log salary', y = 'Actual log salary') +
-  theme_bw()
-```
----
-### Pop quiz
-
-Why the strange patterns?
+A slippy map is a map with a tiled base layer, with panning and zooming and other features that you supply.
 
 ```{r, echo = FALSE}
-ggplot(data = Hitters, aes(x = preds_reg, y = log_salary)) +
-  geom_point() +
-  labs(x = 'Predicted log salary', y = 'Actual log salary') +
-  theme_bw()
+library(leaflet)
+ucb_geo <- geocode(ucb_ext)
+map <- leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng = ~lon, lat = ~lat, data = ucb_geo)
+map
 ```
 ---
-### Predictions in R
+### Slippy Maps in R
 
-And this is what predictions look like from our classification problem using the `Heart` data:
+The `leaflet` R package is a wrapper for the `leaflet` javascript library. What that means is that we can use R to create slippy maps. Note that these are meant for **web maps**. You cannot interact with a map in *pdf* or *Word*. So, your homework this week will have to be turned in as an html file.
 
 ```{r}
-preds <- predict(tree_mod0, newdata = Heart)
-head(preds)
+library(leaflet)
+leaflet() %>% addTiles()
 ```
 ---
-### Pros and cons of trees
+### Slippy Maps in R
 
-Pros:
+Let's focus on SF
 
-- easy to explain and interpret
+```{r}
+leaflet() %>% 
+  setView(lng = -122.3937, lat = 37.79137, zoom = 14) %>%
+  addTiles()
+```
+---
+### Slippy Maps in R
 
-- for small trees, easy to visualize
+Let's add a marker for UC Berkeley Extension
 
-- can handle categorical features easily (linear regression models have to create dummy variables)
+```{r}
+# geocode uc berkeley extension
+ucb_geo <- geocode(ucb_ext)
 
-- feature distributions don't matter because trees only consider the order of the values
+map <- leaflet() %>%
+  addTiles() %>%
+  addMarkers(lng = ~lon, lat = ~lat, data = ucb_geo)
 
-Cons:
+map
+```
+---
+### Slippy Maps for spatial data
 
-- overfit easily, not very robust
+If we have a set of latitudes and longitudes, `leaflet()` also takes a `data` argument.
 
-- not as accurate as regression models
+```{r}
+cholera_coords <- as.data.frame(cholera_latlong)
+head(cholera_coords)
 
-*both of these cons can be alleviated using more advanced methods, such as a random forest*
+```
+---
+### Slippy Maps for spatial data
+
+If we have a set of latitudes and longitudes, `leaflet()` also takes a `data` argument.
+
+```{r}
+cholera_coords <- cholera_coords %>% transmute(latitude = coords.x1, longitude = coords.x2)
+
+cholera <- leaflet(cholera_latlong) %>%
+  addTiles() %>%
+  addMarkers()
+```
+---
+### Slippy Maps for spatial data
+
+```{r}
+cholera
+```
+---
+### Play around with `leaflet()`
+
+You can add labels to the markers, you can add popups (`addPopups()`). Check out the examples from the help file.
+
 ---
 class: inverse, center, middle
 

@@ -22,288 +22,172 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
 
 ### Session 8.3 Outline
 
-- Evaluating predictive models (classification)
-  + *Modern Data Science with R - Chaper 8.4*
+- Time Series Data
 ---
 class: inverse, center, middle
-# Evaluating predictive models (classification)
+# Time Series Data
 ---
-### Regression
+### Why time series data?
 
-For regression we talked about using:
+Many business use cases:
 
-- RMSE - root mean squared error
+- Explaining seasonal patterns in sales
 
-- MAE - mean absolute error
+- Predicting the expected number of incoming or churning customers
 
-- $R^2$ - coefficient of determination
+- Estimating the effect of a newly launched product on number of sold units
 
-There are others, but these are the most commonly used when evaluating models with a quantitative target variable.
+- Detecting unusual events and estimating the magnitude of their effect
 ---
-### Classification
+### Why time series data?
 
-Recall that with classification we might predict one of two things:
-
-1. The category, or class label
-
-2. The probability of belonging to either class
----
-### Predicted category
-
-Logistic regression and decision trees can both predict probabilities, but then we use a probability *cutoff*, or *threshold*, in order to predict which category each observation belongs to. For example, we might say:
-
-$$\text{if } p \geq 0.50, \text{then } Y = 1, \text{else } Y = 0$$
-
-
----
-### Predicted category
-
-Confusion Matrix
-
-We create this matrix (rows: predicted; cols: actuals; cells: counts)
-
-*Example: how many defaulted on their credit cards? How many did not default? How many were predicted to default?*
-
-![](pics/conf.png)
-
----
-### Confusion matrix metrics
-![](pics/conf2.png)
-
-- True positives (TP)
-- False positives (FP)
-- True negatives (TN)
-- False negatives (FN)
-
----
-### Confusion matrix metrics
-![](pics/conf2.png)
-
-Accuracy: what proportion of our observations are predicted correctly?
-$$\frac{(TP + TN)}{\text{Total}} = \frac{150}{165} = .91$$
----
-### Confusion matrix metrics
-![](pics/conf2.png)
-
-Misclassification rate (error): what proportion of our observations are predicted ncorrectly?
-$$1 - \text{Accuracy} = 0.09$$
----
-### Confusion matrix metrics
-![](pics/conf2_sm.png)
-.pull-left[
-- True Positive rate = $$\frac{TP}{\text{Actual Positives}} = \frac{100}{105}$$
-  + Also called *sensitivity* or *recall*
-  
-- False Positive rate = $$\frac{FP}{\text{Actual Negatives}} = \frac{10}{60}$$
-]
-.pull-right[
-- Precision = $$\frac{TP}{\text{Predicted Positives}} = \frac{100}{110}$$
-
-
-- Specificity = $$\frac{TN}{\text{Actual Negatives}} = \frac{50}{60}$$
-]
----
-### Pop quiz
-
-Oftentimes we have imbalanced data, meaning that the thing we are trying to predict occurs very rarely (e.g. fraud detection). Why is Accuracy or misclassification rate a terrible metric to use in these cases?
-
----
-### Confusion matrices in R
-
-Recall that we had trained a decision tree model on the `Heart` data:
-
-
-```{r, message=FALSE, warning=FALSE}
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+library(forecast)
 library(tidyverse)
-library(rpart)
-```
+library(tseries)
+daily_data <- read_csv('../../demos/session_8/day.csv')
 
-```{r, echo = FALSE}
-Heart <- read_csv('../../demos/session_8/Heart.csv')
-```
+daily_data$Date = as.Date(daily_data$dteday)
 
-```{r}
-tree_mod0 <- rpart(AHD ~ ., data = Heart)
-preds <- predict(tree_mod0, newdata = Heart)
-head(preds)
+ggplot(daily_data, aes(Date, cnt)) + geom_line() + scale_x_date('month')  + ylab("Daily Bike Checkouts") +
+            xlab("")
 ```
 ---
-### Convert from probability to category
+### Bike data
 
-Let's add the predictions as a column to the `Heart` data and then recode it:
-
-```{r}
-Heart <- Heart %>% mutate(preds_prob = preds[, 2]) %>% 
-  mutate(preds_cat = case_when(preds_prob < .5 ~ 'No',
-                               preds_prob >= .5 ~ 'Yes'))
-
-Heart %>% count(preds_cat)
-```
----
-### Confusion matrices in R
-
-Now, for the confusion matrix:
-
-```{r}
-Heart %>% count(preds_cat, AHD) %>% spread(AHD, n)
-```
-
-There are other external packages that will create and work with confusion matrices more easily. We will look at these in the next section.
-
----
-### Predicted Probability
-
-Notice in the previous section that we used a probability cutoff of 0.5, and we classified observations into Yes and No categories based on how their predicted probabilities compared to the threshold (< 0.5, then No, $\geq$ 0.5, then Yes).
-
-But why would a cutoff of 0.50 be correct? Why not 0.10? Or 0.90?
-
-Answer: it depends on the problem at hand. There is no reason that 0.50 should be the correct cutoff. 
----
-### ROC curves
-
-Receiver Operator Characteristic, or ROC, curves are commonly used when we are predicting probabilities. They are useful for three main reasons:
-
-- the shape of the curve can tell you a bit about how your model is performing
-
-- the area under the curve (AUC) is a good overall metric of model performance
-
-- you can use it to find a probability cutoff
-
----
-### What are ROC curves?
-
-The ROC curve is a curve of the True positive rate versus the False positive rate, for any probability cutoff value between 0 and 1.
-
-```{r, warning = FALSE, message = FALSE, echo = FALSE, fig.asp = .9}
-library(ROCR)
-library(plotly)
-pred_obj <- prediction(Heart$preds_prob, Heart$AHD)
-auc_obj <- performance(pred_obj, measure = 'auc')@y.values[[1]]
-perf_obj <- performance(pred_obj, measure = 'tpr', x.measure = 'fpr')
-perf_tbl <- tibble(perf_obj@x.values[[1]], perf_obj@y.values[[1]], perf_obj@alpha.values[[1]])
-names(perf_tbl) <- c('fpr', 'tpr', 'cutoff')
-p <- ggplot(data = perf_tbl, aes(x = fpr, y = tpr, label = cutoff)) +
-  geom_line(color = 'blue') +
-  geom_abline(intercept = 0, slope = 1, lty = 3) +
-  labs(x = 'False positive rate', y = 'True positive rate', title = 'ROC curve for Heart model') +
-  geom_text(aes(x = .75, y = .25, label = paste0('AUC = ', round(auc_obj, 2)))) +
-  theme_bw()
-  
-ggplotly(p)
-```
----
-### ROC curve for `Heart` model
-
-For example, if we chose a cutoff value of 0.74, our True positive rate is about .81, and our False positive rate is about .13.
-
-```{r, echo = FALSE, fig.asp = .9}
-ggplotly(p)
-```
----
-### Pop quiz
-
-What happens to the True positive rate as we increase our probability cutoff? What happens to the False positive rate? Is this expected?
-
-```{r, echo = FALSE, fig.asp = .9}
-ggplotly(p)
-```
----
-### Visualization illustrating ROC curves
-
-There is a nice demo here:
-
-[http://www.navan.name/roc/](http://www.navan.name/roc/)
-
----
-### Area under the curve (AUC)
-
-The area under the curve is a strong indicator of model performance. One thing that is great about it is that you don't have to choose a probability cutoff for it to be useful because it takes **all possible cutoffs** into account.
-
-Properties of AUC:
-
-- between 0 and 1
-
-- the higher the better
-
-- AUC $\leq$ .5 $\Rightarrow$ your model is worse than random guessing
-  + the diagonal line indicates a random guess model
-```{r, echo = FALSE}
-p
-```
----
-### ROC curves in R
-
-We will use the fabulous `ROCR` package for evaluating the performance of classification models.
+First, let's install a package: `forecast` for time series modeling.
+Next, download the bike data (`day.csv`) and load it into `R`.
 
 ```{r, eval = FALSE}
-install.packages('ROCR')
-library(ROCR)
+library(forecast)
+library(tidyverse)
+library(tseries)
+
+daily_data <- read_csv('path/to/day.csv')
 ```
-
 ---
-### Create a `prediction` object
-
-`ROCR` works with something called `prediction` objects. We will use the `prediction()` function, which takes two arguments: 
-
-1. Your predicted probabilities
-2. The actual target categories (labels)
+### Bike data
 
 ```{r}
-pred_obj <- prediction(predictions = Heart$preds_prob, 
-                       labels = Heart$AHD)
+glimpse(daily_data)
 ```
 ---
-### Create a `performance` object
+### EDA
 
-Now that we have the `prediction` object, there is a lot we can do with it using the `performance()` function. Check the help file for details. For now, let's plot the ROC curve.
+Let's convert the `dteday` column to a Date object and plot the time series for the number of bikes checked out per day.
+
+```{r, echo = TRUE, warning=FALSE, message=FALSE}
+daily_data$Date = as.Date(daily_data$dteday)
+
+ggplot(daily_data, aes(Date, cnt)) + 
+  geom_line() + 
+  ylab("Daily Bike Checkouts") +
+  xlab("") +
+  theme_bw()
+```
+---
+### EDA
+
+What do we see as far as:
+
+- trend
+- seasonality
+- volatility?
+
+Do these make sense?
+
+```{r, echo = FALSE, warning=FALSE, message=FALSE}
+ggplot(daily_data, aes(Date, cnt)) + 
+  geom_line() + 
+  ylab("Daily Bike Checkouts") +
+  xlab("") +
+  theme_bw()
+```
+---
+### Let's clean it up a little
+
+We can remove outliers with the `tsclean()` function.
 
 ```{r}
-roc <- performance(prediction.obj = pred_obj,
-                   measure = 'tpr', x.measure = 'fpr')
-plot(roc)
+count_ts = ts(daily_data %>% select(cnt)) 
+
+daily_data <- daily_data %>% mutate(clean_cnt = tsclean(count_ts))
+
+ggplot() +
+  geom_line(data = daily_data, aes(x = Date, y = clean_cnt)) + 
+  ylab('Cleaned Bicycle Count') +
+  theme_bw()
 ```
 ---
-### That is one uuuggggly plot
+### The Moving Average
 
-I'll show you how to make a better plot on the homework.
+A simple way of smoothing out a time series is to look at the moving average, i.e. the average value inside a moving window of some length of time.
 
-.center[![](pics/keanu.gif)]
+$$\Huge MA = \frac{1}{m}\sum_{i=-k}^{k} y_{t+i}$$
+
+where $\huge k$ is half of the size of the time window.
 ---
-### How about the AUC?
+### The Moving Average
 
-We can get the AUC like this:
+We can use the `ma()` function from the `forecast` package.
 
 ```{r}
-auc <- performance(prediction.obj = pred_obj,
-                   measure = 'auc')
-auc@y.values[[1]]
+daily_data <- daily_data %>% mutate(cnt_ma7 = ma(clean_cnt, order = 7),
+                                    cnt_ma30 = ma(clean_cnt, order = 30))
+
+daily_data %>% select(cnt, cnt_ma7, cnt_ma30)
 ```
-
 ---
-### Wait, what?? `auc@y.values[[1]]` ?!?
-
-`ROCR` uses something called `S4` objects. Don't worry about the details of it, but `S4` objects store their components in `slots` which you can extract using the `@`. Each component is an R `list`, which you use the `[[]]` to extract values from...
+### The Moving Average
 
 ```{r}
-auc
+ggplot(data = daily_data) +
+  geom_line(aes(x = Date, y = clean_cnt, colour = "Counts")) +
+  geom_line(aes(x = Date, y = cnt_ma7,   colour = "Weekly Moving Average"))  +
+  geom_line(aes(x = Date, y = cnt_ma30, colour = "Monthly Moving Average"))  +
+  ylab('Bicycle Count') +
+  theme_bw()
 ```
-
 ---
-### Wait, what?? `auc@y.values[[1]]` ?!?
+### Time Series Decomposition
 
-`ROCR` uses something called `S4` objects. Don't worry about the details of it, but `S4` objects store their components in `slots` which you can extract using the `@`. Each component is an R `list`, which you use the `[[]]` to extract values from...
+We often break a time series down by its
+
+- trend: the overall pattern of the series (increasing, decreasing, non-seasonal cycles)
+- seasonality: fluctuations over the calendar cycle
+- error/residual: everything else
+
+$$\Huge Y_t = S_t + T_t + E_t$$
+---
+### Time Series Decomposition
+
+We can use the `stl()` function in base R to do this.
+
+```{r, fig.asp = .6}
+# Convert to time series object
+# frequency is number of observations/time unit
+count_ma <- ts(na.omit(daily_data$cnt_ma30), frequency=30)
+
+# decompose
+decomp <- stl(count_ma, s.window="periodic")
+
+plot(decomp)
+```
+---
+### Question for you
+
+Why do we even care about decomposing the time series? Why don't we just use linear regression to forecast new values using some features, and ignore time?
+---
+### Dynamic Time Series Plots
+
+We can use the `dygraphs` R package to create interactive time series plots. The package provides functions that are wrappers around the dygraphs javascript library.
 
 ```{r}
-auc@y.values
-
-auc@y.values[[1]]
+library(dygraphs)
+dygraph(data = daily_data$clean_cnt,
+        xlab = 'Day',
+        ylab = 'Bicycle Count')
 ```
-
----
-### Extra credit
-
-If you can create an R package that will `tidy` these `ROCR` objects into tibbles, you will be my R hero!!  
-
 ---
 class: inverse, center, middle
 

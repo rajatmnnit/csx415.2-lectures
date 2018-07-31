@@ -82,11 +82,11 @@ Conversion rates are proportions (what proportion of visitors converted). Sample
 
 Theoretically, 
 
-`$$\huge \hat{p} \sim N\left(p, \sqrt{\frac{{p}(1-{p})}{n}}\right)$$`
+`$$\huge \hat{p} \sim N\left(p, \sqrt{\frac{{p}(1-p)}{n}}\right)$$`
 
 The standard error of `\(\huge \hat{p}\)` is
 
-`$$\huge \sqrt{\frac{{p}(1-{p})}{n}}$$`
+`$$\huge \sqrt{\frac{{p}(1-p)}{n}}$$`
 
 as long as `\(\huge np \geq 10\)` and `\(\huge n(1-p) \geq 10\)`
 ---
@@ -172,7 +172,7 @@ samp_a/n_a
 ```
 
 ```
-## [1] 0.047
+## [1] 0.051
 ```
 
 ```r
@@ -180,7 +180,7 @@ samp_b/n_b
 ```
 
 ```
-## [1] 0.05
+## [1] 0.044
 ```
 ---
 ### Empirical sampling distribution
@@ -198,7 +198,7 @@ head(samp_a)
 ```
 
 ```
-## [1] 58 57 43 57 54 55
+## [1] 47 59 47 45 48 39
 ```
 
 ```r
@@ -206,7 +206,7 @@ head(samp_b)
 ```
 
 ```
-## [1] 51 50 50 49 59 63
+## [1] 51 47 48 47 63 45
 ```
 ---
 ### Empirical sampling distribution

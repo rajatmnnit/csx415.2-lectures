@@ -62,10 +62,10 @@ Ok, from this graphic, version A had a higher conversion rate than version B, so
 Recall that we often want to estimate a parameter using a sample statistic, and that statistics have variability!
 
 
-We want to know $\huge p_{A}$ and $\huge p_{B}$: the true conversion rates for the entire population for Version A and Version B
+We want to know $\large p_{A}$ and $\large p_{B}$: the true conversion rates for the entire population for Version A and Version B
 
 
-We estimate this using $\huge \hat{p}_{A}$ and $\huge \hat{p}_{B}$: the conversion rates from a sample of visitors to Version A and Version B
+We estimate this using $\large \hat{p}_{A}$ and $\large \hat{p}_{B}$: the conversion rates from a sample of visitors to Version A and Version B
 ---
 ### The Sample Statistic
 
@@ -102,17 +102,17 @@ samp_prop_df %>% ggplot(aes(x = samp_prop)) +
 
 Theoretically, 
 
-$\huge p =$ population proportion
+$\large p =$ population proportion
 
-$\huge \hat{p} =$ sample proportion
+$\large \hat{p} =$ sample proportion
 
-$$\huge \hat{p} \sim N\left(p, \sqrt{\frac{p(1-p)}{n}}\right)$$
+$$\large \hat{p} \sim N\left(p, \sqrt{\frac{p(1-p)}{n}}\right)$$
   
-The standard error of $\huge \hat{p}$ is
+The standard error of $\large \hat{p}$ is
 
-$$\huge \sqrt{\frac{p(1-p)}{n}}$$
+$$\large \sqrt{\frac{p(1-p)}{n}}$$
   
-as long as $\huge np \geq 10$ and $\huge n(1-p) \geq 10$
+as long as $\large np \geq 10$ and $\large n(1-p) \geq 10$
 
 ---
 ### Samples from A and B
@@ -138,13 +138,13 @@ class: inverse, center, middle
 ---
 ### The binomial distribution
 
-Suppose we have a process (such as flipping a coin) that only has two possible outcomes (failure and success), and that the outcome we are interested in happens with a constant probability of $\huge p$. And suppose we observe $\huge n$ number of trials of that process.
+Suppose we have a process (such as flipping a coin) that only has two possible outcomes (failure and success), and that the outcome we are interested in happens with a constant probability of $\large p$. And suppose we observe $\large n$ number of trials of that process.
 
-Let $\huge X$ be the number of successes we observe out of those $\huge n$ trials.
+Let $\large X$ be the number of successes we observe out of those $\large n$ trials.
 
 Example:
 
-We flip a fair coin 100 times. The *success* in this case is landing on heads. The probability of landing on heads is 0.5. The number of heads, out of 100 coin flips, follows a binomial distribution with $\huge n = 100, p = 0.5$.
+We flip a fair coin 100 times. The *success* in this case is landing on heads. The probability of landing on heads is 0.5. The number of heads, out of 100 coin flips, follows a binomial distribution with $\large n = 100, p = 0.5$.
 
 ---
 ### The binomial distribution
@@ -153,15 +153,15 @@ OR...
 
 Suppose we have 1000 visitors each to our Version A and B webpages, and a *success* in this case is that the visitor converts. Also suppose the probability of conversion is constant. Then
 
-$\huge X_{A}:$ the number of version A visitors who convert, and 
-$\huge X_{B}:$ the number of version B visitors who convert
+$\large X_{A}:$ the number of version A visitors who convert, and 
+$\large X_{B}:$ the number of version B visitors who convert
 
-follow Binomial distributions, with $\huge n = 1000$, and $\huge p =$ probability of conversion.
+follow Binomial distributions, with $\large n = 1000$, and $\large p =$ probability of conversion.
 
 ---
 ### The binomial distribution
 
-$\huge X_{A}$ follows a binomial distribution that looks like this:
+$\large X_{A}$ follows a binomial distribution that looks like this:
 
 ```{r, echo = FALSE}
 x <- 1:1000
@@ -246,7 +246,7 @@ plot_data %>% ggplot(aes(x = samp_b)) +
 
 What happens to our sampling distibution if our number of visitors decreases? Increases? What does that mean for our standard error?
 
-$$\huge \sqrt{\frac{p(1-p)}{n}}$$
+$$\large \sqrt{\frac{p(1-p)}{n}}$$
 
 ---
 class: inverse, center, middle
@@ -264,13 +264,13 @@ We have our null hypothesis that the conversion rate (proportions) =0.1, versus 
 
 Null:
 
-$$\huge H_{0}: p_{A} = 0.1$$
+$$\large H_{0}: p_{A} = 0.1$$
 
 Alternatives:
 
-$$\huge H_{alt}: p_{A} \neq 0.1$$
-$$\huge H_{alt}: p_{A} > 0.1$$
-$$\huge H_{alt}: p_{A} < 0.1$$
+$$\large H_{alt}: p_{A} \neq 0.1$$
+$$\large H_{alt}: p_{A} > 0.1$$
+$$\large H_{alt}: p_{A} < 0.1$$
 ---
 ### Hypothesis testing fundamental idea
 
@@ -340,7 +340,7 @@ samp_dist2
 
 Ok, visuals are fine, but we need an objective measure of how likely, or unlikely, it is to observe our sample proportion if the null is true. The p-value works fine for this.
 
-Recall the definition: the p-value is the probability of observing a statistic as extreme, or more extreme, than what we got, if the null is true. If p-value < $\huge \alpha$, we reject the null hypothesis.
+Recall the definition: the p-value is the probability of observing a statistic as extreme, or more extreme, than what we got, if the null is true. If p-value < $\large \alpha$, we reject the null hypothesis.
 
 ---
 ### Return of the p-value
@@ -365,8 +365,8 @@ To use `prop.test()` we need:
 - x: number of successes
 - n: size of the sample
 - p: our null hypothesis value
-- alternative: default is $\huge \neq$
-- conf.level: $\huge 1 - \alpha$, default is 0.95
+- alternative: default is $\large \neq$
+- conf.level: $\large 1 - \alpha$, default is 0.95
 
 ```{r}
 # x is number of successes (conversions)
@@ -383,7 +383,7 @@ names(prop_test)
 prop_test$p.value
 ```
 
-The p-value is small (less than some value $\huge \alpha$ that we choose, typically 0.05), so we decide that our null hypothesis is wrong, and that the true conversion rate **IS NOT** 0.1.
+The p-value is small (less than some value $\large \alpha$ that we choose, typically 0.05), so we decide that our null hypothesis is wrong, and that the true conversion rate **IS NOT** 0.1.
 ---
 ### Pop Quiz
 
@@ -420,17 +420,17 @@ We have our null hypothesis that the two conversion rates (proportions) are equa
 
 Null:
 
-$$\huge H_{0}: p_{A} = p_{B}$$
+$$\large H_{0}: p_{A} = p_{B}$$
 
 Alternatives:
 
-$$\huge H_{alt}: p_{A} \neq p_{B}$$
-$$\huge H_{alt}: p_{A} > p_{B}$$
-$$\huge H_{alt}: p_{A} < p_{B}$$
+$$\large H_{alt}: p_{A} \neq p_{B}$$
+$$\large H_{alt}: p_{A} > p_{B}$$
+$$\large H_{alt}: p_{A} < p_{B}$$
 ---
 ### The alternative hypothesis
 
-The alternative hypothesis you choose is problem-specific, but to make it easy, we will always be testing versus the alternative hypothesis that $\huge p_{A} \neq p_{B}$.
+The alternative hypothesis you choose is problem-specific, but to make it easy, we will always be testing versus the alternative hypothesis that $\large p_{A} \neq p_{B}$.
 ---
 ### The hypothesis test - redefined
 
@@ -438,13 +438,13 @@ Since we want to *compare* two sample proportions to each other, we need to rede
 
 Null:
 
-$$\huge H_{0}: p_{A} - p_{B} = 0$$
+$$\large H_{0}: p_{A} - p_{B} = 0$$
 
 Alternatives:
 
-$$\huge H_{alt}: p_{A} - p_{B} \neq 0$$
-$$\huge H_{alt}: p_{A} - p_{B} > 0$$
-$$\huge H_{alt}: p_{A} - p_{B} < 0$$
+$$\large H_{alt}: p_{A} - p_{B} \neq 0$$
+$$\large H_{alt}: p_{A} - p_{B} > 0$$
+$$\large H_{alt}: p_{A} - p_{B} < 0$$
 ---
 ### The hypothesis test - redefined
 
@@ -452,7 +452,7 @@ Guess what we have to think about now? Yes, what is the sampling distribution fo
 
 Luckily, it is simple:
 
-$$\huge \hat{p}_{A} - \hat{p}_{B} \sim N\left(p_{A}-p_{B}, \sqrt{\frac{p_{A}(1-p_{A})}{n_{A}} + \frac{p_{B}(1-p_{B})}{n_{B}}}\right)$$
+$$\large \hat{p}_{A} - \hat{p}_{B} \sim N\left(p_{A}-p_{B}, \sqrt{\frac{p_{A}(1-p_{A})}{n_{A}} + \frac{p_{B}(1-p_{B})}{n_{B}}}\right)$$
 ---
 ### Hypothesis testing fundamental idea
 
@@ -615,15 +615,15 @@ There are two types of errors when doing hypothesis testing:
 
 Easy way to remember which is which:
 
-$$\huge H_{0}:$$
-$$\huge H_{alt}:$$
+$$\large H_{0}:$$
+$$\large H_{alt}:$$
 
 - We made an error -> Null hypothesis was true -> Type I error
 - We made an error -> Alternative hypothesis was true -> Type II error
 ---
 ### Errors
 
-Each type of error has a certain *probability* of occurring. The probability of a type I error is $\huge \alpha$. Think about that for a second...
+Each type of error has a certain *probability* of occurring. The probability of a type I error is $\large \alpha$. Think about that for a second...
 
 We won't discuss the probability of a Type II error...
 ---

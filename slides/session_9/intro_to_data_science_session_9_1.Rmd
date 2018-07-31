@@ -43,7 +43,7 @@ class: inverse, center, middle
 ---
 ### How do we include categorical variables in a regression model?
 
-$$\huge \hat{f}(X) = \hat{\beta}_{0} + \hat{\beta}_{1}X_{1} + \hat{\beta}_{2}X_{2} + \ldots + \hat{\beta}_{p}X_{p}$$
+$$\large \hat{f}(X) = \hat{\beta}_{0} + \hat{\beta}_{1}X_{1} + \hat{\beta}_{2}X_{2} + \ldots + \hat{\beta}_{p}X_{p}$$
 ---
 ### Encoding categorical variables
 
@@ -57,7 +57,7 @@ There are many ways to encode categorical variables:
 ---
 ### Dummy variables
 
-Suppose $\huge X_{1}$ is a categorical variable with $\huge k$ categories. We create $\huge k-1$ dummy variables.
+Suppose $\large X_{1}$ is a categorical variable with $\large k$ categories. We create $\large k-1$ dummy variables.
 
 For example: `cut` from the diamonds data has 5 categories: `{Ideal, Premium, Good, Very Good, Fair}`
 
@@ -87,11 +87,11 @@ This is what `lm()` will do to an unordered factor by default.
 
 So that this:
 
-$$\Huge \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times cut$$
+$$\large \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times cut$$
 
 becomes this:
 
-$$\Huge \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
+$$\large \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
 ---
 ### Dummy variables
 
@@ -106,21 +106,21 @@ tidy(mod_1)
 
 So this
 
-$$\Huge \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
+$$\large \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
 
 is equivalent to this
 
-$$\Huge \hat{Price} = \hat{\beta_{0}}$$
+$$\large \hat{Price} = \hat{\beta_{0}}$$
 ---
 ### What happens when `cut = Good`?
 
-$$\Huge \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
+$$\large \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}} \times Good + \hat{\beta_{2}} \times VeryGood + \hat{\beta_{3}} \times Premium + \hat{\beta_{4}} \times Ideal$$
 
 is equivalent to this
 
-$$\Huge \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}}$$
+$$\large \hat{Price} = \hat{\beta_{0}} + \hat{\beta_{1}}$$
 
-and we interpret $\huge \hat{\beta_{1}}$ as the mean difference in `Price` between `Fair` and `Good` diamonds. 
+and we interpret $\large \hat{\beta_{1}}$ as the mean difference in `Price` between `Fair` and `Good` diamonds. 
 ---
 class: inverse, center, middle
 
@@ -153,7 +153,7 @@ We often break a time series down by its
 - seasonality: fluctuations over the calendar cycle
 - error/residual: everything else
 
-$$\Huge Y_t = S_t + T_t + E_t$$
+$$\large Y_t = S_t + T_t + E_t$$
 ---
 ### Time Series Decomposition
 

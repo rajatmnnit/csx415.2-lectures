@@ -21,355 +21,608 @@ class: center, middle, inverse, title-slide
 
 ### Session 9.2 Outline
 
-- Statistical learning III
-  + Bagging - you'll need the `modelr` package
-  + Random forest - you'll need the `randomForest` package
-  + *Introduction to Statistical Learning - Chapter 8.2.1-8.2.2*
+- A/B Testing
+  + What is A/B Testing
+  + The Binomial Distribution
+  + Hypothesis Testing
+  + Errors
+  
 ---
 class: inverse, center, middle
-# Bagging
+# What is A/B Testing
 ---
-### Decision trees
+### A/B Testing
 
-Decision trees suffer from high *variance* (recall the bias-variance tradeoff)
+Typically used for web analytics, A/B testing is a randomized experiment with two variants of a webpage. We want to know which version of the webpage is *more effective*. For today, we will measure *more effective* as the conversion rate (percentage of visitors who converted).
+
+We may also care about:
+
+- revenue/user
+- transactions/user
+- number of purchases/user
+- click-through rate
+
+---
+### A/B Testing
+
+Imagine we have our current version of a webpage, and we change some detail about it (this could be anything from style, layout, wordings, etc.). We then randomly send half of our traffic to Version A and the other half to Version B.
+
+.center[![](pics/what-ab-test.png)]
+
+---
+### A/B Testing
+
+Ok, from this graphic, version A had a higher conversion rate than version B, so we're done, right? Version A is better?
+
+.center[![](pics/what-ab-test.png)]
+---
+### The Sample Statistic
+
+Recall that we often want to estimate a parameter using a sample statistic, and that statistics have variability!
+
+
+We want to know `\(\huge p_{A}\)` and `\(\huge p_{B}\)`: the true conversion rates for the entire population for Version A and Version B
+
+
+We estimate this using `\(\huge \hat{p}_{A}\)` and `\(\huge \hat{p}_{B}\)`: the conversion rates from a sample of visitors to Version A and Version B
+---
+### The Sample Statistic
+
+If we take a new sample, these rates will be different. The question we need to answer is: are these rates significantly different from each other given what we know about variability and standard error?
+
+.center[![](pics/what-ab-test.png)]
+---
+### The Sampling Distribution for Proportions
+
+Conversion rates are proportions (what proportion of visitors converted). Sample proportions have a very common sampling distribution.
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-1-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Sampling Distribution for Proportions
+
+Theoretically, 
+
+`$$\huge \hat{p} \sim N\left(p, \sqrt{\frac{{p}(1-{p})}{n}}\right)$$`
+
+The standard error of `\(\huge \hat{p}\)` is
+
+`$$\huge \sqrt{\frac{{p}(1-{p})}{n}}$$`
+
+as long as `\(\huge np \geq 10\)` and `\(\huge n(1-p) \geq 10\)`
+---
+### Samples from A and B
+
+Suppose we have:
+
+- A and B versions of our webpage
+- True conversion rate for version A = .05
+- True conversion rate for version B = .05
+- Sample of size 1000 for each version
+
+and we want to simulate sample conversion rates. We can use the `rbinom()` function.
+
+
+```r
+true_a &lt;- .05
+true_b &lt;- .05
+n_a &lt;- 1000
+n_b &lt;- 1000
+```
+---
+class: inverse, center, middle
+# The Binomial Distribution
+---
+### The binomial distribution
+
+Suppose we have a process (such as flipping a coin) that only has two possible outcomes (failure and success), and that the outcome we are interested in happens with a constant probability of `\(\huge p\)`. And suppose we observe `\(\huge n\)` number of trials of that process.
+
+Let `\(\huge X\)` be the number of successes we observe out of those `\(\huge n\)` trials.
+
+Example:
+
+We flip a fair coin 100 times. The *success* in this case is landing on heads. The probability of landing on heads is 0.5. The number of heads, out of 100 coin flips, follows a binomial distribution with `\(\huge n = 100, p = 0.5\)`.
+
+---
+### The binomial distribution
+
+OR...
+
+Suppose we have 1000 visitors each to our Version A and B webpages, and a *success* in this case is that the visitor converts. Also suppose the probability of conversion is constant. Then
+
+`\(\huge X_{A}:\)` the number of version A visitors who convert, and 
+`\(\huge X_{B}:\)` the number of version B visitors who convert
+
+follow Binomial distributions, with `\(\huge n = 1000\)`, and `\(\huge p =\)` probability of conversion.
+
+---
+### The binomial distribution
+
+`\(\huge X_{A}\)` follows a binomial distribution that looks like this:
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### The binomial distribution
+
+If we know the true probability that a visitor converts, we can simulate our sample conversion rate.
 
 
 
 ```r
-library(tidyverse)
-library(rpart)
-library(partykit)
-library(ISLR)
-Heart &lt;- read_csv('path to Heart.csv')
-Heart &lt;- Heart %&gt;% mutate(AHD = as.factor(AHD), ChestPain = as.factor(ChestPain),
-                            Thal = as.factor(Thal))
+true_a &lt;- .05
+true_b &lt;- .05
+n_a &lt;- 1000
+n_b &lt;- 1000
+
+# this part will simulate how many conversions there are
+# for our 1000 visitors, when we know the true conversion rates
+# n = 1 because we only want one sample conversion rate
+samp_a &lt;- rbinom(n = 1, size = n_a, prob = true_a)
+samp_b &lt;- rbinom(n = 1, size = n_b, prob = true_b)
 ```
 
-
-
-
-```r
-model_samp_1 &lt;- Heart %&gt;% sample_frac(.5) 
-model_samp_2 &lt;- Heart %&gt;% sample_frac(.5)
-model_samp_3 &lt;- Heart %&gt;% sample_frac(.5)
-```
 ---
-### Decision trees
+### The binomial distribution
+
+If we know the true probability that a visitor converts, we can simulate our sample conversion rate.
 
 
 ```r
-tree_mod_1 &lt;- rpart(AHD ~ ., data = model_samp_1)
-tree_mod_2 &lt;- rpart(AHD ~ ., data = model_samp_2)
-tree_mod_3 &lt;- rpart(AHD ~ ., data = model_samp_3)
-```
----
-### Decision trees
-
-
-```r
-plot(as.party(tree_mod_1))
+samp_a/n_a
 ```
 
-&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /&gt;
----
-### Decision trees
-
-
-```r
-plot(as.party(tree_mod_2))
+```
+## [1] 0.047
 ```
 
-&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /&gt;
+```r
+samp_b/n_b
+```
+
+```
+## [1] 0.05
+```
 ---
-### Decision trees
+### Empirical sampling distribution
+
+Now, lets run the simulation 1000 times to see the empirical sampling distribution:
 
 
 ```r
-plot(as.party(tree_mod_3))
+m &lt;- 1000
+
+samp_a &lt;- rbinom(n = m, size = n_a, prob = true_a)
+samp_b &lt;- rbinom(n = m, size = n_b, prob = true_b)
+
+head(samp_a)
+```
+
+```
+## [1] 58 57 43 57 54 55
+```
+
+```r
+head(samp_b)
+```
+
+```
+## [1] 51 50 50 49 59 63
+```
+---
+### Empirical sampling distribution
+
+Now, lets run the simulation 1000 times to see the empirical sampling distribution:
+
+
+```r
+plot_data &lt;- as_tibble(list(samp_a = samp_a/n_a, samp_b = samp_b/n_b))
+plot_data %&gt;% ggplot(aes(x = samp_a)) +
+  geom_histogram(binwidth = .001) +
+  xlab('Sample proportions for Version A') +
+  theme_bw()
 ```
 
 &lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Decision trees
+### Empirical sampling distribution
 
-We can grow a tree so that it has very *low bias*
+Now, lets run the simulation 1000 times to see the empirical sampling distribution:
 
 
 ```r
-deep_tree &lt;- rpart(AHD ~ ., data = Heart, 
-                   control = rpart.control(cp = 0, minsplit = 0))
+plot_data %&gt;% ggplot(aes(x = samp_b)) +
+  geom_histogram(binwidth = .001) +
+  xlab('Sample proportions for Version B') +
+  theme_bw()
 ```
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Decision trees
+### Pop Quiz
+
+What happens to our sampling distibution if our number of visitors decreases? Increases? What does that mean for our standard error?
+
+`$$\huge \sqrt{\frac{{p}(1-{p})}{n}}$$`
+
+---
+class: inverse, center, middle
+# Hypothesis Testing
+---
+### Hypothesis Testing
+
+Suppose we wanted to test the hypothesis that the conversion rate for version A is different than 0.1. 
+
+We have our null hypothesis that the conversion rate (proportions) =0.1, versus the alternative hypothesis that it is either:
+
+- not equal to 0.1
+- greater than 0.1
+- less than 0.1
+
+Null:
+
+`$$\huge H_{0}: p_{A} = 0.1$$`
+
+Alternatives:
+
+`$$\huge H_{alt}: p_{A} \neq 0.1$$`
+`$$\huge H_{alt}: p_{A} &gt; 0.1$$`
+`$$\huge H_{alt}: p_{A} &lt; 0.1$$`
+---
+### Hypothesis testing fundamental idea
+
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
+
+If null is true, then our sampling distribution is
 
 &lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Bootstrap aggregating
+### Hypothesis testing fundamental idea
 
-Recall the bootstrap sample:
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
 
-1. take a sample of size `\(n\)` from your dataset, *with replacement*
+What if our sample proportion is 0.09?
 
-2. estimate your parameter of interest (mean, coefficients, etc.), call it `\(\hat{\alpha}\)`
-
-3. Repeat Steps 1 and 2, `\(m\)` times, so that we have `\(m\)` estimates of our parameter: `\(\hat{\alpha}_{1}, \hat{\alpha}_{2}, ...,\hat{\alpha}_{m},\)`
-
-4. Standard error of `\(\hat{\alpha}\)` is estimated by:
-
-`$$SE(\hat{\alpha}) = \text{standard deviation of your set of }\hat{\alpha}_{i}$$`
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Bootstrap aggregating
+### Hypothesis testing fundamental idea
 
-We are going to use this idea, but change it slightly:
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
 
-1. take a sample of size `\(n\)` from your dataset, *with replacement*
+What if our sample proportion is 0.07?
 
-2. fit your model of interest (regression, trees, etc.), call it `\(\hat{f}\)`
-
-3. Repeat Steps 1 and 2, `\(m\)` times, so that we have `\(m\)` model fits: `\(\hat{f}_{1}, \hat{f}_{2}, ...,\hat{f}_{m},\)`
-
-4. Average the predictions from your models:
-
-`$$\hat{f}_{avg} = \frac{1}{m}\sum_{i=1}^{m}\hat{f}_{i}(X)$$`
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Bootstrap aggregating
+### Hypothesis testing fundamental idea
 
-Bootstrap aggregating, or bagging, is a method for reducing the variance of a statistical learning model by:
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
 
-1. Training `\(m\)` models on `\(m\)` boostrap samples of your training data
+What if our sample proportion is 0.05?
 
-2. Averaging the predictions from all `\(m\)` models
-
-Intuitively, you can probably see how this would reduce the **variance**
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Bagging trees
+### Return of the p-value
 
-Bagging is especially effective on decision trees due to the very high variance of trees. But, how do you get predictions from bagged trees?
+Ok, visuals are fine, but we need an objective measure of how likely, or unlikely, it is to observe our sample proportion if the null is true. The p-value works fine for this.
 
-- **Regression**: average the predictions from each individual tree
+Recall the definition: the p-value is the probability of observing a statistic as extreme, or more extreme, than what we got, if the null is true. If p-value &lt; `\(\huge \alpha\)`, we reject the null hypothesis.
 
-- **Classification**: majority vote - for each individual tree the predicted class is simply the majority class in the terminal node, then take the most common predicted class over the `\(m\)` trees 
-
-- **Probabilities**: proportion of votes for the positive class
 ---
-### Single decision tree vs bagged trees
+### Return of the p-value
 
-Let's split the data into train and test using the `resample_partition()` function from `modelr`
+The p-value is the area under the curve (depending on your alternative hypothesis).
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /&gt;
+
+---
+### Return of the p-value
+
+Luckily, we don't have to deal with z-tables or calculating p-values ourselves. We are doing a hypothesis test of proportions, so we can use the `prop.test()` function to perform the test and extract the p-value.
+
+To use `prop.test()` we need:
+
+- x: number of successes
+- n: size of the sample
+- p: our null hypothesis value
+- alternative: default is `\(\huge \neq\)`
+- conf.level: `\(\huge 1 - \alpha\)`, default is 0.95
 
 
 ```r
-library(modelr)
-set.seed(9870)
-Heart_sets &lt;- resample_partition(Heart, c(test = 0.3, train = 0.7))
-class(Heart_sets)
-```
-
-```
-## [1] "list"
-```
-
-```r
-Heart_sets
-```
-
-```
-## $test
-## &lt;resample [90 x 14]&gt; 2, 4, 13, 15, 17, 18, 25, 31, 35, 37, ...
-## 
-## $train
-## &lt;resample [213 x 14]&gt; 1, 3, 5, 6, 7, 8, 9, 10, 11, 12, ...
+# x is number of successes (conversions)
+# n is size of sample
+# p is our null hypothesized value
+prop_test &lt;- prop.test(x = 50, n = 1000, p = .10)
 ```
 ---
-### Single decision tree vs bagged trees
-
-Fit and evaluate a single decision tree. We'll use the AUC.
+### Hypothesis tests for proportions in R
 
 
 ```r
-library(ROCR) # use ROCR
-one_tree &lt;- rpart(AHD ~ ., data = Heart_sets$train) # fit tree
-preds &lt;- predict(one_tree, Heart_sets$test)[,2] # get predictions
-
-actuals &lt;- as.tibble(Heart_sets$test)$AHD # extract actuals
-
-pred_obj &lt;- prediction(predictions = preds, 
-                       labels = actuals)
-
-one_tree_auc &lt;- performance(pred_obj, measure = 'auc')@y.values[[1]]
-one_tree_auc
+class(prop_test)
 ```
 
 ```
-## [1] 0.8250866
+## [1] "htest"
 ```
+
+```r
+names(prop_test)
+```
+
+```
+## [1] "statistic"   "parameter"   "p.value"     "estimate"    "null.value" 
+## [6] "conf.int"    "alternative" "method"      "data.name"
+```
+
+```r
+prop_test$p.value
+```
+
+```
+## [1] 1.811017e-07
+```
+
+The p-value is small (less than some value `\(\huge \alpha\)` that we choose, typically 0.05), so we decide that our null hypothesis is wrong, and that the true conversion rate **IS NOT** 0.1.
 ---
-### Single decision tree vs bagged trees
+### Pop Quiz
 
-Now let's do bagging, with 100 bootstrap samples from the training set, and evaluate the final model on the test set. *Code not shown.*
+Use the code below to help you simulate a sample of 1000 visitors, where the true conversion rate is .05, and then test these hypotheses:
 
+- the conversion rate is .05
+- the conversion rate is .06, .07, .08
 
+What did you notice?
 
 
 ```r
-pred_obj_bagged &lt;- prediction(predictions = bagged_preds, 
-                       labels = actuals)
+samp_a &lt;- rbinom(n = 1, size = 1000, p = ___)
 
-bagged_100_auc &lt;- performance(pred_obj_bagged, measure = 'auc')@y.values[[1]]
-bagged_100_auc
-```
+samp_a
 
-```
-## [1] 0.8720109
-```
----
-### Single decision tree vs bagged trees
+prop_test_05 &lt;- prop.test(x = ___, n = 1000, p = ___)
+prop_test_06 &lt;- prop.test(x = ___, n = 1000, p = ___)
+prop_test_07 &lt;- prop.test(x = ___, n = 1000, p = ___)
+prop_test_08 &lt;- prop.test(x = ___, n = 1000, p = ___)
 
-Ok, we saw that the test set AUC was much higher for the bagged trees. Let's see how the test set AUC changes for different numbers of bagged trees. 
-
-Solid line = bagged trees  
-Dashed line = single tree
-
-
-
-&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /&gt;
----
-class: center, middle, inverse
-# Random forests
----
-### Correlated trees
-
-Bagging produces many trees built on resampled data, but what happens if there are one or two **very strong** features?
-
-- Each tree has a high chance of choosing this strong feature for its first split
-
-- Each tree looks similar to each other
-
-- Averaging a bunch of correlated trees will not improve performance much
-
----
-### Random forests
-
-Random forests are very similar to bagging trees, with one key difference that *decorrelates* the trees:
-
-- at each split point (node), only a random subset of the features are considered as candidates for splitting the node
-
-  + note that a new sample of features is taken for **every** node, it is not the same sample for each node
-  
-
-```
-## Age, Sex, ChestPain, RestBP, Chol, Fbs, 
-## RestECG, MaxHR, ExAng, Oldpeak, Slope, Ca, Thal
-```
-
----
-### Random forest tuning parameters
-
-There are primarily two parameters that you have control over that can affect the predictive performance of your final model:
-
-- *Number of features to sample at each node split
-
-- Number of trees to build
-
-**this parameter has the biggest impact assuming you choose a relatively large number of trees to build*
----
-### Random forests in R
-
-We'll use the very popular `randomForest` package, which has familiar arguments:
-
-- formula
-- data 
-- mtry: number of features to sample at each node 
-- ntrees: number of trees to build
-- na.action: how should missing values be treated?
-
-
-```r
-Hearts_train &lt;- as.tibble(Heart_sets$train)
-Hearts_test &lt;- as.tibble(Heart_sets$test)
-# We have some missing values in our data, so we
-# deal with those using na.roughfix
-rf_mod &lt;- randomForest(AHD ~ ., data = Hearts_train, 
-                       mtry = 3, ntrees = 100, 
-                       na.action=na.roughfix)
+prop_test_05$p.value
+prop_test_06$p.value
+prop_test_07$p.value
+prop_test_08$p.value
 ```
 ---
-### Random forests in R
+### We want to test whether our two sample conversion rates are significantly different
 
+We have our null hypothesis that the two conversion rates (proportions) are equal, versus the alternative hypothesis that they are either:
 
-```r
-rf_mod
-```
+- not equal
+- conversion rate for version A &gt; version B
+- conversion rate for version A &lt; version B
 
-```
-## 
-## Call:
-##  randomForest(formula = AHD ~ ., data = Hearts_train, mtry = 3,      ntrees = 100, na.action = na.roughfix) 
-##                Type of random forest: classification
-##                      Number of trees: 500
-## No. of variables tried at each split: 3
-## 
-##         OOB estimate of  error rate: 15.96%
-## Confusion matrix:
-##      No Yes class.error
-## No  107  14   0.1157025
-## Yes  20  72   0.2173913
-```
+Null:
+
+`$$\huge H_{0}: p_{A} = p_{B}$$`
+
+Alternatives:
+
+`$$\huge H_{alt}: p_{A} \neq p_{B}$$`
+`$$\huge H_{alt}: p_{A} &gt; p_{B}$$`
+`$$\huge H_{alt}: p_{A} &lt; p_{B}$$`
 ---
-### Random forests vs bagging and decision tree
+### The alternative hypothesis
 
+The alternative hypothesis you choose is problem-specific, but to make it easy, we will always be testing versus the alternative hypothesis that `\(\huge p_{A} \neq p_{B}\)`.
+---
+### The hypothesis test - redefined
 
+Since we want to *compare* two sample proportions to each other, we need to redefine our hypotheses to make it work.
+
+Null:
+
+`$$\huge H_{0}: p_{A} - p_{B} = 0$$`
+
+Alternatives:
+
+`$$\huge H_{alt}: p_{A} - p_{B} \neq 0$$`
+`$$\huge H_{alt}: p_{A} - p_{B} &gt; 0$$`
+`$$\huge H_{alt}: p_{A} - p_{B} &lt; 0$$`
+---
+### The hypothesis test - redefined
+
+Guess what we have to think about now? Yes, what is the sampling distribution for the difference of two sample proportions?
+
+Luckily, it is simple:
+
+`$$\huge \hat{p}_{A} - \hat{p}_{B} \sim N\left(p_{A}-p_{B}, \sqrt{\frac{p_{A}(1-p_{A})}{n_{A}} + \frac{p_{B}(1-p_{B})}{n_{B}}}\right)$$`
+---
+### Hypothesis testing fundamental idea
+
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
+
+If null is true, then our sampling distribution is
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-17-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Hypothesis testing fundamental idea
+
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
+
+What if the difference in our sample proportions is 0.01?
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-18-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Hypothesis testing fundamental idea
+
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
+
+What if the difference in our sample proportions is -0.01?
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-19-1.png" style="display: block; margin: auto;" /&gt;
+---
+### Hypothesis testing fundamental idea
+
+Let's assume the null is true, and then see how likely our sample proportion is given the null is true.
+
+What if the difference in our sample proportions is -.05?
 
 &lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-20-1.png" style="display: block; margin: auto;" /&gt;
 ---
-### Tuning random forests
+### A/B testing in R
 
-How do we select the best value of the `mtry` argument?
-
----
-### But we've lost something
-
-Remember how interpretable decision trees are? And we could even plot them.
-
-Random forests and bagging are what's known as **black box** models - we can't easily peak inside them to see how/why the model works. 
-
-![](pics/blackbox.jpg)
----
-### But we've lost something
-
-It doesn't make sense to plot one of the bagged trees from bagging or random forest:
-
-- these trees are usually grown very deep
-
-- one tree has very little relationship with the entire collection of trees
-
-- the reason bagging and random forests works well is because of the *averaging* of trees, and NOT because any subset of the trees are particularly good
----
-### Feature importance
-
-We can instead calculate a measure of feature importance, and plot these:
+We can use the same `prop.test()` function to compare two proportions to each other!
 
 
 ```r
-rf_mod &lt;- randomForest(AHD ~ ., data = Hearts_train, 
-                       mtry = 3, ntrees = 100, 
-                       na.action = na.roughfix,
-                       importance = TRUE)
-varImpPlot(rf_mod, type = 2)
+true_a &lt;- .05
+true_b &lt;- .05
+n_a &lt;- 1000
+n_b &lt;- 1000
+
+# this part will simulate how many conversions there are
+# for our 1000 visitors, when we know the true conversion rates
+# n = 1 because we only want one sample conversion rate
+set.seed(10)
+samp_a &lt;- rbinom(n = 1, size = n_a, prob = true_a)
+samp_b &lt;- rbinom(n = 1, size = n_b, prob = true_b)
+```
+---
+### A/B testing in R
+
+The p-value below tells us that the conversion rates for Version A and B are not significantly different than each other, so we'd conclude here that whatever changes were made to the webpage had no effect.
+
+
+```r
+samp_a
 ```
 
-&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-21-1.png" style="display: block; margin: auto;" /&gt;
+```
+## [1] 43
+```
+
+```r
+samp_b
+```
+
+```
+## [1] 53
+```
+
+```r
+two_prop_test &lt;- prop.test(c(samp_a, samp_b), c(1000, 1000))
+two_prop_test$p.value
+```
+
+```
+## [1] 0.3464841
+```
 ---
-### Feature importance
+### A/B testing in R
 
-- Regression: 
-  + for each tree, and for each feature, add up the amount that the residual sum of squares is reduced
-  + average over all trees
-  + the bigger, the more important the feature is
+Do it again, but let's now change the true conversion rate for version B to 0.1.
 
-- Classification: 
-  + for each tree, and for each feature, add up the amount that the Gini index is reduced
-  + average over all trees
-  + the bigger, the more important the feature is 
+
+```r
+true_a &lt;- .05
+true_b &lt;- .10
+n_a &lt;- 1000
+n_b &lt;- 1000
+
+# this part will simulate how many conversions there are
+# for our 1000 visitors, when we know the true conversion rates
+# n = 1 because we only want one sample conversion rate
+set.seed(10)
+samp_a &lt;- rbinom(n = 1, size = n_a, prob = true_a)
+samp_b &lt;- rbinom(n = 1, size = n_b, prob = true_b)
+```
+---
+### A/B testing in R
+
+The p-value below tells us that the conversion rates for Version A and B **are** significantly different than each other, so we'd conclude here that whatever changes were made to the webpage **did have** an effect.
+
+
+```r
+samp_a
+```
+
+```
+## [1] 43
+```
+
+```r
+samp_b
+```
+
+```
+## [1] 101
+```
+
+```r
+two_prop_test &lt;- prop.test(c(samp_a, samp_b), c(1000, 1000))
+two_prop_test$p.value
+```
+
+```
+## [1] 8.188291e-07
+```
+---
+### Pop Quiz
+
+Run the code below about a dozen times and see if you notice anything unusual.
+
+
+```r
+true_a &lt;- .05
+true_b &lt;- .05
+n_a &lt;- 1000
+n_b &lt;- 1000
+
+# this part will simulate how many conversions there are
+# for our 1000 visitors, when we know the true conversion rates
+# n = 1 because we only want one sample conversion rate
+samp_a &lt;- rbinom(n = 1, size = n_a, prob = true_a)
+samp_b &lt;- rbinom(n = 1, size = n_b, prob = true_b)
+two_prop_test &lt;- prop.test(c(samp_a, samp_b), c(1000, 1000))
+two_prop_test$p.value
+```
+---
+class: inverse, center, middle
+# Hypothesis Test Errors
+---
+### Errors 
+
+From the previous pop quiz you should have noticed that sometimes you actually do conclude that the conversion rates are different, even though we know they are the same. We made an error.
+
+There are two types of errors when doing hypothesis testing:
+
+- Type I error: we rejected the null hypothesis, but we shouldn't have (null was true)
+
+- Type II error: we didn't reject the null hypothesis, but we should have (alternative was true)
+
+---
+### Errors
+
+Easy way to remember which is which:
+
+`$$\huge H_{0}:$$`
+`$$\huge H_{alt}:$$`
+
+- We made an error -&gt; Null hypothesis was true -&gt; Type I error
+- We made an error -&gt; Alternative hypothesis was true -&gt; Type II error
+---
+### Errors
+
+Each type of error has a certain *probability* of occurring. The probability of a type I error is `\(\huge \alpha\)`. Think about that for a second...
+
+We won't discuss the probability of a Type II error...
+---
+### Long-running experiment
+
+We may want to check the result of our A/B test over time, so we'll be looking at results of a hypothesis test over time, as our sample size gets bigger, and the number of conversions increases.
+
+What do you think our test results might look like over time? Do you think they'll always lead to the same conclusion?
+---
+### Long-running experiment
+
+&lt;img src="intro_to_data_science_session_9_2_files/figure-html/unnamed-chunk-26-1.png" style="display: block; margin: auto;" /&gt;
 ---
 class: inverse, center, middle
 

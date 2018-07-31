@@ -98,18 +98,7 @@ samp_prop_df %>% ggplot(aes(x = samp_prop)) +
   theme_bw()
 ```
 ---
-### Sampling Distribution for Proportions
 
-Theoretically, 
-
-$$\huge \hat{p} \sim N\left(p, \sqrt{\frac{{p}(1-p)}{n}}\right)$$
-
-The standard error of $\huge \hat{p}$ is
-
-$$\huge \sqrt{\frac{{p}(1-p)}{n}}$$
-
-as long as $\huge np \geq 10$ and $\huge n(1-p) \geq 10$
----
 ### Samples from A and B
 
 Suppose we have:

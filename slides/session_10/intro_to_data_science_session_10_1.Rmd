@@ -21,14 +21,14 @@ knitr::opts_chunk$set(fig.align = "center", fig.asp=.5, message = FALSE, warning
 ```
 ### Final announcements
 
-- Final homework is due by Friday April 6 at noon
+- Final homework is due by Friday Aug 10th at noon
   + you can email it to me if Canvas won't let you
 
-- Canvas may cut off your access tonight
+- Canvas may cut off your access within a week after the end of class
   + I will leave you enough time to download assignments, solutions, and lecture materials today
   + I will email you all the solution for the final
   + I will email you all the reading list
-  + I will email you the instructions for getting the slides from my Github repository
+  + I will email you all the slide links
 
 ---
 ### Session 10.1 Outline

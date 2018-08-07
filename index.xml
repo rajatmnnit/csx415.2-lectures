@@ -1,89 +1,0 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title></title>
-    <link>/</link>
-    <description>Recent content on </description>
-    <generator>Hugo -- gohugo.io</generator>
-    <language>en-us</language>
-    <lastBuildDate>Mon, 18 Sep 2017 00:00:00 +0000</lastBuildDate>
-    
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
-    
-    
-    <item>
-      <title>Ain&#39;t nobody got time for that</title>
-      <link>/2017/09/aint-nobody-got-time-for-that/</link>
-      <pubDate>Mon, 18 Sep 2017 00:00:00 +0000</pubDate>
-      
-      <guid>/2017/09/aint-nobody-got-time-for-that/</guid>
-      <description>I certainly don’t want to promise that I’ll post anything here. My past experiences have proven that maintaining a blog is serious business. However, I’m gonna leave this section here, just in case I change my mind.</description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>/page/x4152_introduction_to_data_science/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/x4152_introduction_to_data_science/</guid>
-      <description>X415.2 - Introduction to Data Sciencecode{white-space: pre;}pre:not([class]) {background-color: white;}if (window.hljs &amp;&amp; document.readyState &amp;&amp; document.readyState === &#34;complete&#34;) {window.setTimeout(function() {hljs.initHighlighting();}, 0);}h1 {font-size: 34px;}h1.title {font-size: 38px;}h2 {font-size: 30px;}h3 {font-size: 24px;}h4 {font-size: 18px;}h5 {font-size: 16px;}h6 {font-size: 12px;}.</description>
-    </item>
-    
-    <item>
-      <title>Here I Am</title>
-      <link>/page/about/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/about/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Here I Am</title>
-      <link>/page/about_2/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/about_2/</guid>
-      <description>Hello there. Welcome. I find it strange that you are here, reading this. What does it say about you that you are? What does it say about me that I even wrote this in the first place?
-I am just a lowly data scientist who put this site together to provide materials to students who hope to learn something about data science from me. There is no other reason for you to be here, reading this.</description>
-    </item>
-    
-    <item>
-      <title>Teaching</title>
-      <link>/page/teaching/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/teaching/</guid>
-      <description> I enjoy teaching, mostly about statistics, predictive modeling, and anything having to do with R. I aim to teach from a more practical standpoint, mainly because I am not a theoretical mathematician/statistician. There is nothing wrong with being theoretical, I am just not smart enough for it.
-I teach the following courses for UC Berkeley Extension:
-COMPSCI X415.2-Introduction to Data Science </description>
-    </item>
-    
-    <item>
-      <title>X415.2 - Introduction to Data Science</title>
-      <link>/page/x4152_introduction_to_data_science/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/x4152_introduction_to_data_science/</guid>
-      <description>Introduction to Data Science Syllabus Course Materials Installing R and RStudio You will need both R and RStudio for this course. R is a statistical computing and graphic programming language, and RStudio is the IDE for R that we will be using. Installing these on your laptop before our first meeting will help us move along at a quicker pace.
-To install R, follow the instructions for your OS here: https://cran.</description>
-    </item>
-    
-    <item>
-      <title>X415.2 - Introduction to Data Science syllabus</title>
-      <link>/page/x4152_syllabus/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>/page/x4152_syllabus/</guid>
-      <description>Introduction to Data Science Course Information Course title: X415.2 Introduction to Data Science
-Meeting times and location: T, 6:30PM-9:30PM, SF Campus Room 504
-Course website: https://r-clements.github.io/page/x4152_introduction_to_data_science/
-All course materials will be available at the website above. I will also use Canvas to distribute assignments, post grades, and lecture materials, if that suits you.
-Instructor Information Name: Robert Clements
-email: robert UNDERSCORE clements AT berkeley DOT edu
-Homepage: https://r-clements.github.io
-Course Description Gain an understanding of the core concepts of data science illustrated through the use of the R language.</description>
-    </item>
-    
-  </channel>
-</rss>
